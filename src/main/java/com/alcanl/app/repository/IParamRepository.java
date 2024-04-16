@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface IParamRepository extends CrudRepository<Param, Long> {
     Iterable<Param> findByLibrary(Library library);
 
-    @Query("FROM Param p WHERE p.library.hearingAid = :hearingAid")
+    @Query("FROM Param p WHERE p.hearingAid = :hearingAid ")
     Optional<Param> findByHearingAid(HearingAid hearingAid);
 }

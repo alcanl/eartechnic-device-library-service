@@ -15,12 +15,11 @@ public class Library {
     @Column(name = "library_file", nullable = false)
     public File libFile;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "paramId", cascade = CascadeType.ALL)
     public Set<Param> params;
 
-    @OneToOne
-    @JoinColumn(name = "hearing_aid_model_name", nullable = false)
-    public HearingAid hearingAid;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modelName", cascade = CascadeType.ALL)
+    public Set<HearingAid> hearingAid;
 
     @Override
     public boolean equals(Object other)
