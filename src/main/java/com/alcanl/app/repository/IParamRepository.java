@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IParamRepository extends CrudRepository<Param, Long> {
+public interface IParamRepository extends CrudRepository<Param, String> {
     Iterable<Param> findByLibrary(Library library);
 
-    @Query("FROM Param p WHERE p.hearingAid = :hearingAid ")
+    @Query(value = "SELECT * FROM param_info pi WHERE pi.param_id = (SELECT param_id FROM hearing_aid ha WHERE ha = :hearingAid)", nativeQuery = true)
     Optional<Param> findByHearingAid(HearingAid hearingAid);
 }

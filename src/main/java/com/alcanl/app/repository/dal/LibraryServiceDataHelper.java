@@ -108,4 +108,12 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName");
         }
     }
+    public Optional<Library> findLibraryById(String name)
+    {
+        try {
+            return m_libraryRepository.findById(name);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findLibraryById");
+        }
+    }
 }

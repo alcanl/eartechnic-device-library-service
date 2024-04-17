@@ -1,9 +1,13 @@
 package com.alcanl.app.controller;
 
 import com.alcanl.app.repository.dal.LibraryServiceDataHelper;
+import com.alcanl.app.repository.entity.HearingAid;
+import com.alcanl.app.repository.entity.Library;
+import com.alcanl.app.repository.entity.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -17,15 +21,19 @@ public class LibraryServiceController {
     {
         m_libraryServiceDataHelper = libraryServiceDataHelper;
     }
-    @GetMapping("/library")
-    public ResponseEntity<File> getLibrary(String hearingAidModelName)
+    @GetMapping("/hearing")
+    public ResponseEntity<HearingAid> getHearingAid(@RequestParam(name = "model")String hearingAidModelName)
     {
         var hearingAidOpt = m_libraryServiceDataHelper.findLibraryByHearingAidModelName(hearingAidModelName);
 
-        if (hearingAidOpt.isPresent())
-            return ResponseEntity.of(hearingAidOpt.map(hearingAid -> hearingAid.library.libFile));
+        return ResponseEntity.of(hearingAidOpt);
+    }
+    @GetMapping("/library")
+    public Library getLibrary(@RequestParam(name = "name")String libraryName)
+    {
+        var libraryOpt = m_libraryServiceDataHelper.findLibraryById(libraryName);
 
-        return ResponseEntity.notFound().build();
+        return libraryOpt.orElse(null);
     }
 
 }

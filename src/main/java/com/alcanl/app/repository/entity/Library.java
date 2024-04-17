@@ -3,6 +3,7 @@ package com.alcanl.app.repository.entity;
 import jakarta.persistence.*;
 
 import java.io.File;
+import java.io.Serial;
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,7 @@ public class Library {
     @Column(name = "library_id")
     public String libId;
 
+    @Convert
     @Column(name = "library_file", nullable = false)
     public File libFile;
 

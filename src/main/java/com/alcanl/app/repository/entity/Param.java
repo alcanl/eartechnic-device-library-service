@@ -12,6 +12,7 @@ public class Param {
     @Column(name = "param_id")
     public String paramId;
 
+    @Convert
     @Column(name = "param_file", nullable = false)
     public File params;
 
