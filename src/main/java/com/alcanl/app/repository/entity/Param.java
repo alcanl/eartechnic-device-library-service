@@ -1,8 +1,6 @@
 package com.alcanl.app.repository.entity;
 
 import jakarta.persistence.*;
-
-import java.io.File;
 import java.util.Set;
 
 @Entity
@@ -12,9 +10,8 @@ public class Param {
     @Column(name = "param_id")
     public String paramId;
 
-    @Convert
     @Column(name = "param_file", nullable = false)
-    public File params;
+    public byte[] params;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "libId", nullable = false)

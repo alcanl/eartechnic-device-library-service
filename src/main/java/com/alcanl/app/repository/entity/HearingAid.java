@@ -9,11 +9,11 @@ public class HearingAid {
     @Column(name = "hearing_aid_model_name")
     public String modelName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "libId", nullable = false)
     public Library library;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paramId", nullable = false)
     public Param param;
 

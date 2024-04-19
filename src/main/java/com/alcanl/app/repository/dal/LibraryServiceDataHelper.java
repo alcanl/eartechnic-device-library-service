@@ -8,8 +8,6 @@ import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
 import com.karandev.util.data.repository.exception.RepositoryException;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 import java.util.Optional;
 
 @Component
@@ -25,19 +23,7 @@ public class LibraryServiceDataHelper {
         m_paramRepository = paramRepository;
     }
 
-    public Optional<File> getHearingAidLibFile(HearingAid hearingAid)
-    {
-        try {
-            var libOpt = m_libraryRepository.findByHearingAid(hearingAid);
-
-            return libOpt.map(library -> library.libFile);
-
-        } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::getHearingAidLibFile", ex);
-        }
-    }
-
-    public Optional<File> getHearingAidParams(HearingAid hearingAid)
+    public Optional<byte []> getHearingAidParams(HearingAid hearingAid)
     {
         try {
 
@@ -47,15 +33,6 @@ public class LibraryServiceDataHelper {
 
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::getHearingAidParams", ex);
-        }
-    }
-
-    public Optional<Library> getHearingAidLibrary(HearingAid hearingAid)
-    {
-        try {
-            return m_libraryRepository.findByHearingAid(hearingAid);
-        } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::getHearingAidLibrary", ex);
         }
     }
 
@@ -100,10 +77,16 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::saveParam", ex);
         }
     }
-    public Optional<HearingAid> findLibraryByHearingAidModelName(String modelName)
+    public Optional<byte[]> findLibraryDataByHearingAidModelName(String modelName)
     {
         try {
-            return m_hearingAidRepository.findById(modelName);
+            var hearingAidOpt = m_hearingAidRepository.findById(modelName);
+            if (hearingAidOpt.isPresent())
+                return m_libraryRepository.findLibraryDataByHearingAidModel(modelName);
+
+
+            return Optional.empty();
+
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName");
         }
@@ -114,6 +97,30 @@ public class LibraryServiceDataHelper {
             return m_libraryRepository.findById(name);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryById");
+        }
+    }
+    public Iterable<HearingAid> findHearingAidByLibraryId(String libraryId)
+    {
+        try {
+            return m_hearingAidRepository.findByLibrary(libraryId);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByLibraryId");
+        }
+    }
+    public Iterable<HearingAid> findHearingAidByParamId(String paramId)
+    {
+        try {
+            return m_hearingAidRepository.findByParam(paramId);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByParamId");
+        }
+    }
+    public Optional<HearingAid> findHearingAidById(String modelName)
+    {
+        try {
+            return m_hearingAidRepository.findById(modelName);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidById");
         }
     }
 }
