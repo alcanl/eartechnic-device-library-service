@@ -17,7 +17,7 @@ public class Param {
     @JoinColumn(name = "libId", nullable = false)
     public Library library;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "param", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "defaultParam", cascade = CascadeType.ALL)
     public Set<HearingAid> hearingAid;
 
     @Override

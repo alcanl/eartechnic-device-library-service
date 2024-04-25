@@ -3,30 +3,73 @@ package com.alcanl.app.service;
 import com.alcanl.app.repository.dal.LibraryServiceDataHelper;
 import com.alcanl.app.repository.entity.HearingAid;
 import com.alcanl.app.repository.entity.Library;
-import com.alcanl.app.service.dto.LibraryToHearingAidsDTO;
-import com.alcanl.app.service.dto.ParamToHearingAidsDTO;
-import com.google.gson.GsonBuilder;
+import com.alcanl.app.repository.entity.Param;
+import com.alcanl.app.repository.entity.User;
+import com.alcanl.app.service.dto.*;
+import com.alcanl.app.service.mapper.IFittingInfoMapper;
 import com.karandev.util.data.repository.exception.RepositoryException;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
-import java.nio.charset.StandardCharsets;
+
 import java.util.Optional;
 
 @Service
 public class LibraryDataService {
     private final LibraryServiceDataHelper m_libraryServiceDataHelper;
+    private final IFittingInfoMapper m_fittingInfoMapper;
 
-    public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper)
+    public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper, IFittingInfoMapper fittingInfoMapper)
     {
         m_libraryServiceDataHelper = libraryServiceDataHelper;
+        m_fittingInfoMapper = fittingInfoMapper;
+    }
+    public void saveFittingInfo(FittingInfoSaveDTO fittingInfoSaveDTO)
+    {
+        try {
+            m_libraryServiceDataHelper.saveFittingInfo(m_fittingInfoMapper.toFittingInfo(fittingInfoSaveDTO));
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
+        }
+    }
+    public void saveUser(User user)
+    {
+        try {
+            m_libraryServiceDataHelper.saveUser(user);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::saveUser", ex);
+        }
+    }
+    public void saveHearingAid(HearingAid hearingAid)
+    {
+        try {
+            m_libraryServiceDataHelper.saveHearingAid(hearingAid);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::saveHearingAid", ex);
+        }
+    }
+    public void saveParam(Param param)
+    {
+        try {
+            m_libraryServiceDataHelper.saveParam(param);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::saveParam", ex);
+        }
+    }
+    public void saveLibrary(Library library)
+    {
+        try {
+            m_libraryServiceDataHelper.saveLibrary(library);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::saveLibrary", ex);
+        }
     }
     public LibraryToHearingAidsDTO findHearingAidsByLibrary(String libraryId)
     {
         try {
             var hearingAidList = new LibraryToHearingAidsDTO();
             m_libraryServiceDataHelper.findHearingAidByLibraryId(libraryId)
-                    .forEach(ha -> hearingAidList.hearingAids.add(ha));
+                    .forEach(ha -> hearingAidList.hearingAids.add(new HearingAidDTO(
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId)));
 
             return hearingAidList;
 
@@ -41,7 +84,8 @@ public class LibraryDataService {
             var hearingAidList = new ParamToHearingAidsDTO();
 
             m_libraryServiceDataHelper.findHearingAidByParamId(paramId)
-                    .forEach(ha -> hearingAidList.hearingAids.add(ha));
+                    .forEach(ha -> hearingAidList.hearingAidDTOs.add(new HearingAidDTO(
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId)));
 
             return hearingAidList;
 
@@ -72,6 +116,15 @@ public class LibraryDataService {
     {
         try {
             return m_libraryServiceDataHelper.findLibraryDataByHearingAidModelName(hearingAidModel);
+
+        } catch (Throwable ex) {
+            throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
+        }
+    }
+    public Optional<LibraryToLibDataDTO> findLibraryInfoByHearingAidModel(String hearingAidModel)
+    {
+        try {
+            return m_libraryServiceDataHelper.findLibraryInfoByHearingAidModelName(hearingAidModel);
 
         } catch (Throwable ex) {
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);

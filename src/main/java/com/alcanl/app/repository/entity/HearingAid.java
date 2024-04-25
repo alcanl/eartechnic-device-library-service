@@ -2,6 +2,8 @@ package com.alcanl.app.repository.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "hearing_aid")
 public class HearingAid {
@@ -9,13 +11,19 @@ public class HearingAid {
     @Column(name = "hearing_aid_model_name")
     public String modelName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "libId", nullable = false)
     public Library library;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "paramId", nullable = false)
-    public Param param;
+    public Param defaultParam;
+
+    @Column(name = "active_param_file")
+    public byte[] activeParam;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hearingAid", cascade = CascadeType.ALL)
+    public Set<User> users;
 
     @Override
     public boolean equals(Object other)

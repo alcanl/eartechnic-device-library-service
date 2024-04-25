@@ -13,4 +13,7 @@ public interface ILibraryRepository extends CrudRepository<Library, String> {
     @Query(value = "select library_file from library_info li inner join hearing_aid ha on li.library_id = ha.lib_id  where ha.hearing_aid_model_name  = :hearingAidModel", nativeQuery = true)
     Optional<byte[]> findLibraryDataByHearingAidModel(String hearingAidModel);
 
+    @Query(value = "select library_id from library_info li inner join hearing_aid ha on li.library_id = ha.lib_id  where ha.hearing_aid_model_name  = :hearingAidModel", nativeQuery = true)
+    Optional<String> findLibraryIdByHearingAidModel(String hearingAidModel);
+
 }

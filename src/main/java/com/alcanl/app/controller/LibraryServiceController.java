@@ -2,15 +2,14 @@ package com.alcanl.app.controller;
 
 import com.alcanl.app.repository.entity.HearingAid;
 import com.alcanl.app.repository.entity.Library;
+import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.LibraryDataService;
+import com.alcanl.app.service.dto.FittingInfoSaveDTO;
 import com.alcanl.app.service.dto.LibraryToHearingAidsDTO;
+import com.alcanl.app.service.dto.LibraryToLibDataDTO;
 import com.alcanl.app.service.dto.ParamToHearingAidsDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpHeaders;
 
 
 @RestController
@@ -47,12 +46,28 @@ public class LibraryServiceController {
     {
         return m_libraryDataService.findHearingAidsByParam(paramId);
     }
-    @GetMapping("/library/model")
-    public byte[] getLibraryByHearingAid(@RequestParam(name = "name")String modelName)
+    @GetMapping("/library/data/model")
+    public byte[] getLibraryDataByHearingAid(@RequestParam(name = "name")String modelName)
     {
 
         var libraryDataOpt = m_libraryDataService.findLibraryDataByHearingAidModel(modelName);
         return libraryDataOpt.orElse(null);
     }
+    @GetMapping("/library/info/model")
+    public LibraryToLibDataDTO getLibraryInfoByHearingAid(@RequestParam(name = "name")String modelName)
+    {
 
+        var libraryDataOpt = m_libraryDataService.findLibraryInfoByHearingAidModel(modelName);
+        return libraryDataOpt.orElse(null);
+    }
+    @PostMapping("/user/save")
+    public void saveUser(@RequestBody User user)
+    {
+        m_libraryDataService.saveUser(user);
+    }
+    @PostMapping("/fitting/save")
+    public void saveFittingInfo(@RequestBody FittingInfoSaveDTO fittingInfoSaveDTO)
+    {
+        m_libraryDataService.saveFittingInfo(fittingInfoSaveDTO);
+    }
 }
