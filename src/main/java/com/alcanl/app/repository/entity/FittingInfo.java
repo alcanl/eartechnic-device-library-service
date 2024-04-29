@@ -12,11 +12,11 @@ public class FittingInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long fittingId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
     public User user;
 
-    @Column(name = "fitting_info_date", nullable = false)
+    @Column(name = "fitting_info_date")
     public LocalDateTime fittingDate = LocalDateTime.now();
 
     @Override

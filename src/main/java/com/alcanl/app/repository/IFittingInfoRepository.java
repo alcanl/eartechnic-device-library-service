@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IFittingInfoRepository extends CrudRepository<FittingInfo, Long> {
 
+    @Query("FROM FittingInfo fi WHERE fi.user.userId = :userId")
     Iterable<FittingInfo> findByUserId(long userId);
 
     @Query(value = "select * from fitting_info where date_part('day', fittingDate) = :day and date_part('month', fittingDate) = :month and date_part('year', fittingDate) = :year", nativeQuery = true)
