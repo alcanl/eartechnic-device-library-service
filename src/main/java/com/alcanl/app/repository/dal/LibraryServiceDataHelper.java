@@ -6,7 +6,7 @@ import com.alcanl.app.repository.IParamRepository;
 import com.alcanl.app.repository.IUserRepository;
 import com.alcanl.app.repository.entity.*;
 import com.alcanl.app.repository.IFittingInfoRepository;
-import com.alcanl.app.service.dto.LibraryToLibDataDTO;
+import com.alcanl.app.service.dto.LibraryDTO;
 import com.karandev.util.data.repository.exception.RepositoryException;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
@@ -90,10 +90,10 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::saveLibrary", ex);
         }
     }
-    public void saveParam(Param param)
+    public Param saveParam(Param param)
     {
         try {
-            m_paramRepository.save(param);
+            return m_paramRepository.save(param);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveParam", ex);
         }
@@ -112,16 +112,14 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName");
         }
     }
-    public Optional<LibraryToLibDataDTO> findLibraryInfoByHearingAidModelName(String modelName)
+    public Optional<LibraryDTO> findLibraryInfoByHearingAidModelName(String modelName)
     {
         try {
             var libDataOpt = m_libraryRepository.findLibraryDataByHearingAidModel(modelName);
             var libIdOpt = m_libraryRepository.findLibraryIdByHearingAidModel(modelName);
 
             if (libDataOpt.isPresent() && libIdOpt.isPresent()) {
-                var libraryDTO = new LibraryToLibDataDTO();
-                libraryDTO.libraryData = libDataOpt.get();
-                libraryDTO.libraryName = libIdOpt.get();
+                var libraryDTO = new LibraryDTO(libDataOpt.get(), libIdOpt.get());
 
                 return Optional.of(libraryDTO);
             }

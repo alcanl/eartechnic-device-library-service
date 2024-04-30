@@ -2,11 +2,12 @@ package com.alcanl.app.service;
 
 import com.alcanl.app.repository.dal.LibraryServiceDataHelper;
 import com.alcanl.app.repository.entity.HearingAid;
-import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
 import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.dto.*;
 import com.alcanl.app.service.mapper.IFittingInfoMapper;
+import com.alcanl.app.service.mapper.ILibraryMapper;
+import com.alcanl.app.service.mapper.IParamMapper;
 import com.karandev.util.data.repository.exception.RepositoryException;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,16 @@ import java.util.Optional;
 public class LibraryDataService {
     private final LibraryServiceDataHelper m_libraryServiceDataHelper;
     private final IFittingInfoMapper m_fittingInfoMapper;
+    private final ILibraryMapper m_libraryMapper;
+    private final IParamMapper m_paramMapper;
 
-    public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper, IFittingInfoMapper fittingInfoMapper)
+    public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper, IFittingInfoMapper fittingInfoMapper,
+                              ILibraryMapper libraryMapper, IParamMapper paramMapper)
     {
         m_libraryServiceDataHelper = libraryServiceDataHelper;
         m_fittingInfoMapper = fittingInfoMapper;
+        m_libraryMapper = libraryMapper;
+        m_paramMapper = paramMapper;
     }
     public void saveFittingInfo(FittingInfoSaveDTO fittingInfoSaveDTO)
     {
@@ -47,18 +53,22 @@ public class LibraryDataService {
             throw new ServiceException("LibraryDataService::saveHearingAid", ex);
         }
     }
-    public void saveParam(Param param)
+    public Param saveParam(ParamDTO paramDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveParam(param);
+            var library = m_libraryServiceDataHelper.findLibraryById(paramDTO.getLibrary());
+            var param = m_paramMapper.toParam(paramDTO);
+            param.library = library.orElseThrow(() -> new ServiceException("LibraryDataService::saveParam, Undefined Library"));
+            return m_libraryServiceDataHelper.saveParam(param);
+
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveParam", ex);
         }
     }
-    public void saveLibrary(Library library)
+    public void saveLibrary(LibraryDTO libraryDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveLibrary(library);
+            m_libraryServiceDataHelper.saveLibrary(m_libraryMapper.toLibrary(libraryDTO));
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveLibrary", ex);
         }
@@ -103,10 +113,11 @@ public class LibraryDataService {
         }
     }
 
-    public Optional<Library> findLibraryById(String libraryName)
+    public Optional<LibraryDTO> findLibraryById(String libraryName)
     {
         try {
-            return m_libraryServiceDataHelper.findLibraryById(libraryName);
+            return m_libraryServiceDataHelper.findLibraryById(libraryName).map(
+                    m_libraryMapper::toLibraryDTO);
 
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::findLibraryById", ex);
@@ -121,7 +132,7 @@ public class LibraryDataService {
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
         }
     }
-    public Optional<LibraryToLibDataDTO> findLibraryInfoByHearingAidModel(String hearingAidModel)
+    public Optional<LibraryDTO> findLibraryInfoByHearingAidModel(String hearingAidModel)
     {
         try {
             return m_libraryServiceDataHelper.findLibraryInfoByHearingAidModelName(hearingAidModel);
