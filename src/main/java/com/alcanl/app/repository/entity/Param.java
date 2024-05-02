@@ -11,7 +11,7 @@ public class Param {
     public String paramId;
 
     @Column(name = "param_file", nullable = false)
-    public byte[] params;
+    public byte[] paramData;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "libId", nullable = false)

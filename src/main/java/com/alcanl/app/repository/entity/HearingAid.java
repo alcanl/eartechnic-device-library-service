@@ -19,8 +19,8 @@ public class HearingAid {
     @JoinColumn(name = "paramId", nullable = false)
     public Param defaultParam;
 
-    @Column(name = "active_param_file")
-    public byte[] activeParam;
+    @Column(name = "active_param_id")
+    public String activeParamId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hearingAid", cascade = CascadeType.ALL)
     public Set<User> users;

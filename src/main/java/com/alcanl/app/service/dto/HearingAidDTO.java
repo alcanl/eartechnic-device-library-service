@@ -1,18 +1,24 @@
 package com.alcanl.app.service.dto;
 
 public class HearingAidDTO {
-    private String m_hearingAidModel;
+    private String m_modelName;
     private String m_libraryId;
-    private String m_paramId;
+    private String m_defaultParamId;
+    private String m_activeParamId;
     public HearingAidDTO(String hearingAidModel, String libraryId, String paramId)
     {
-        m_hearingAidModel = hearingAidModel;
+        m_modelName = hearingAidModel;
         m_libraryId = libraryId;
-        m_paramId = paramId;
+        m_defaultParamId = paramId;
     }
-    public HearingAidDTO()
+    public HearingAidDTO() {}
+    public String getActiveParamId()
     {
-
+        return m_activeParamId;
+    }
+    public void setActiveParamId(String activeParamId)
+    {
+        m_activeParamId = activeParamId;
     }
 
     public String getLibraryId()
@@ -25,32 +31,33 @@ public class HearingAidDTO {
         this.m_libraryId = libraryId;
     }
 
-    public String getHearingAidModel()
+    public String getModelName()
     {
-        return m_hearingAidModel;
+        return m_modelName;
     }
 
-    public void setHearingAidModel(String hearingAidModel)
+    public void setModelName(String hearingAidModel)
     {
-        this.m_hearingAidModel = hearingAidModel;
+        this.m_modelName = hearingAidModel;
     }
 
-    public String getParamId()
+    public String getDefaultParamId()
     {
-        return m_paramId;
+        return m_defaultParamId;
     }
 
-    public void setParamId(String paramId)
+    public void setDefaultParamId(String paramId)
     {
-        this.m_paramId = paramId;
+        this.m_defaultParamId = paramId;
     }
     @Override
     public boolean equals(Object other)
     {
-        return other instanceof HearingAidDTO ha && ha.m_hearingAidModel.equals(m_hearingAidModel);
+        return other instanceof HearingAidDTO ha && ha.m_modelName.equals(m_modelName);
     }
+    @Override
     public int hashCode()
     {
-        return m_hearingAidModel.hashCode();
+        return m_modelName.hashCode();
     }
 }

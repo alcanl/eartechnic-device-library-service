@@ -8,10 +8,7 @@ public class LibraryDTO {
     private String m_libraryName;
     private byte [] m_libraryData;
 
-    public LibraryDTO()
-    {
-
-    }
+    public LibraryDTO() {}
     public LibraryDTO(byte[] libraryData, String libraryName)
     {
         m_libraryName = libraryName;

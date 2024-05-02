@@ -34,7 +34,7 @@ public class LibraryServiceDataHelper {
 
             var libOpt = m_paramRepository.findByHearingAid(hearingAid);
 
-            return libOpt.map(param -> param.params);
+            return libOpt.map(param -> param.paramData);
 
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::getHearingAidParams", ex);
@@ -160,6 +160,14 @@ public class LibraryServiceDataHelper {
             return m_hearingAidRepository.findById(modelName);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidById");
+        }
+    }
+    public Optional<Param> findParamById(String paramId)
+    {
+        try {
+            return m_paramRepository.findById(paramId);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findParamById");
         }
     }
 }
