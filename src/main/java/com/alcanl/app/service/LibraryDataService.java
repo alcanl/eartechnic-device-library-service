@@ -1,19 +1,14 @@
 package com.alcanl.app.service;
 
 import com.alcanl.app.repository.dal.LibraryServiceDataHelper;
-import com.alcanl.app.repository.entity.HearingAid;
-import com.alcanl.app.repository.entity.Param;
-import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.dto.*;
-import com.alcanl.app.service.mapper.IFittingInfoMapper;
-import com.alcanl.app.service.mapper.IHearingAidMapper;
-import com.alcanl.app.service.mapper.ILibraryMapper;
-import com.alcanl.app.service.mapper.IParamMapper;
+import com.alcanl.app.service.mapper.*;
 import com.karandev.util.data.repository.exception.RepositoryException;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class LibraryDataService {
@@ -22,41 +17,52 @@ public class LibraryDataService {
     private final ILibraryMapper m_libraryMapper;
     private final IParamMapper m_paramMapper;
     private final IHearingAidMapper m_hearingAidMapper;
+    private final IUserMapper m_userMapper;
 
     public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper, IFittingInfoMapper fittingInfoMapper,
-                              ILibraryMapper libraryMapper, IParamMapper paramMapper, IHearingAidMapper hearingAidMapper)
+                              ILibraryMapper libraryMapper, IParamMapper paramMapper, IHearingAidMapper hearingAidMapper,
+                              IUserMapper userMapper)
     {
         m_libraryServiceDataHelper = libraryServiceDataHelper;
         m_fittingInfoMapper = fittingInfoMapper;
         m_libraryMapper = libraryMapper;
         m_paramMapper = paramMapper;
         m_hearingAidMapper = hearingAidMapper;
+        m_userMapper = userMapper;
     }
-    public void saveFittingInfo(FittingInfoSaveDTO fittingInfoSaveDTO)
+    public void saveFittingInfo(FittingInfoDTO fittingInfoDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveFittingInfo(m_fittingInfoMapper.toFittingInfo(fittingInfoSaveDTO));
+            m_libraryServiceDataHelper.saveFittingInfo(m_fittingInfoMapper.toFittingInfo(fittingInfoDTO));
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
         }
     }
-    public void saveUser(User user)
+    public void saveUser(UserDTO userDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveUser(user);
+            m_libraryServiceDataHelper.saveUser(m_userMapper.toUser(userDTO));
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveUser", ex);
         }
     }
-    public void saveHearingAid(HearingAid hearingAid)
+    public void saveHearingAid(HearingAidDTO hearingAidDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveHearingAid(hearingAid);
+            var libOpt = m_libraryServiceDataHelper.findLibraryById(hearingAidDTO.getLibraryId());
+            var defaultParamOpt = m_libraryServiceDataHelper.findParamById(hearingAidDTO.getDefaultParamId());
+            var activeParamOpt = m_libraryServiceDataHelper.findParamById(hearingAidDTO.getActiveParamId());
+
+            if (libOpt.isPresent() && defaultParamOpt.isPresent() && activeParamOpt.isPresent())
+                m_libraryServiceDataHelper.saveHearingAid(
+                        m_hearingAidMapper.toHearingAid(hearingAidDTO, libOpt.get(), defaultParamOpt.get())
+                );
+
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveHearingAid", ex);
         }
     }
-    public Param saveParam(ParamDTO paramDTO)
+    public void saveParam(ParamDTO paramDTO)
     {
         try {
             var library = m_libraryServiceDataHelper.findLibraryById(paramDTO.getLibraryName());
@@ -65,7 +71,7 @@ public class LibraryDataService {
                     library.orElseThrow(() ->
                             new ServiceException("LibraryDataService::saveParam, Undefined Library")));
 
-            return m_libraryServiceDataHelper.saveParam(param);
+            m_libraryServiceDataHelper.saveParam(param);
 
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveParam", ex);
@@ -83,7 +89,7 @@ public class LibraryDataService {
     {
         try {
             var hearingAidList = new LibraryToHearingAidsDTO();
-            m_libraryServiceDataHelper.findHearingAidByLibraryId(libraryId)
+            m_libraryServiceDataHelper.findHearingAidsByLibraryId(libraryId)
                     .forEach(ha -> hearingAidList.hearingAids.add(new HearingAidDTO(
                             ha.modelName, ha.library.libId, ha.defaultParam.paramId)));
 
@@ -136,7 +142,7 @@ public class LibraryDataService {
         try {
             return m_libraryServiceDataHelper.findLibraryDataByHearingAidModelName(hearingAidModel);
 
-        } catch (Throwable ex) {
+        } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
         }
     }
@@ -145,8 +151,62 @@ public class LibraryDataService {
         try {
             return m_libraryServiceDataHelper.findLibraryInfoByHearingAidModelName(hearingAidModel);
 
-        } catch (Throwable ex) {
+        } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
+        }
+    }
+    public Optional<UserDTO> findUserByEmailAndPassword(String eMail, String password)
+    {
+        try {
+            return m_libraryServiceDataHelper.findUserByEmailAndPassword(eMail, password).map(m_userMapper::toUserDTO);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findUserByEmailAndPassword", ex);
+        }
+    }
+    public Iterable<FittingInfoDTO> findFittingInfoByUser(UserDTO userDTO)
+    {
+        try {
+            var userOpt = m_libraryServiceDataHelper.findUserByEmailAndPassword(
+                    userDTO.getEMail(), userDTO.getPassword()
+            );
+
+            return userOpt.map(user -> StreamSupport.stream(m_libraryServiceDataHelper.findFittingInfoByUser(user)
+                    .spliterator(), false).map(m_fittingInfoMapper::toFittingInfoDTO).toList()).orElse(null);
+
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findFittingInfoByUser", ex);
+        }
+    }
+    public Iterable<ParamDTO> findParamsByLibrary(LibraryDTO libraryDTO)
+    {
+        try {
+            var libOpt = m_libraryServiceDataHelper.findLibraryById(libraryDTO.getLibraryName());
+
+            return libOpt.map(library -> StreamSupport.stream(m_libraryServiceDataHelper.findParamsByLibrary(library).spliterator()
+            , false).map(m_paramMapper::toParamDTO).toList()).orElse(null);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findParamsByLibrary", ex);
+        }
+    }
+    public Optional<ParamDTO> findParamByHearingAid(String modelName)
+    {
+        try {
+            var hearingAidOpt = m_libraryServiceDataHelper.findHearingAidById(modelName);
+
+            return hearingAidOpt.flatMap(hearingAid -> m_libraryServiceDataHelper.findParamByHearingAid(hearingAid).map(m_paramMapper::toParamDTO));
+
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findParamByHearingAid", ex);
+        }
+    }
+    public Optional<byte[]> findParamDataByHearingAid(String modelName)
+    {
+        try {
+            var hearingAidOpt = m_libraryServiceDataHelper.findHearingAidById(modelName);
+
+            return hearingAidOpt.flatMap(m_libraryServiceDataHelper::findParamDataByHearingAid);
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findParamDataByHearingAid", ex);
         }
     }
 }

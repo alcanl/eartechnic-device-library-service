@@ -3,7 +3,7 @@ package com.alcanl.app.service.dto;
 import com.alcanl.app.repository.entity.User;
 import java.time.LocalDateTime;
 
-public class FittingInfoSaveDTO {
+public class FittingInfoDTO {
 
     public User user;
 
@@ -12,7 +12,7 @@ public class FittingInfoSaveDTO {
     @Override
     public boolean equals(Object other)
     {
-        return other instanceof FittingInfoSaveDTO fi && user.equals(fi.user) && fittingDate.equals(fi.fittingDate);
+        return other instanceof FittingInfoDTO fi && user.equals(fi.user) && fittingDate.equals(fi.fittingDate);
     }
     @Override
     public int hashCode()

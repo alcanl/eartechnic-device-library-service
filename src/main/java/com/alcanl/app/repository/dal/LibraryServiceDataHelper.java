@@ -28,7 +28,7 @@ public class LibraryServiceDataHelper {
         m_fittingInfoRepository = fittingInfoRepository;
     }
 
-    public Optional<byte []> getHearingAidParams(HearingAid hearingAid)
+    public Optional<byte []> findParamDataByHearingAid(HearingAid hearingAid)
     {
         try {
 
@@ -41,7 +41,7 @@ public class LibraryServiceDataHelper {
         }
     }
 
-    public Optional<Param> getHearingAidParam(HearingAid hearingAid)
+    public Optional<Param> findParamByHearingAid(HearingAid hearingAid)
     {
         try {
             return m_paramRepository.findByHearingAid(hearingAid);
@@ -50,7 +50,7 @@ public class LibraryServiceDataHelper {
         }
     }
 
-    public Iterable<Param> getLibraryParam(Library library)
+    public Iterable<Param> findParamsByLibrary(Library library)
     {
         try {
             return m_paramRepository.findByLibrary(library);
@@ -90,10 +90,10 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::saveLibrary", ex);
         }
     }
-    public Param saveParam(Param param)
+    public void saveParam(Param param)
     {
         try {
-            return m_paramRepository.save(param);
+            m_paramRepository.save(param);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveParam", ex);
         }
@@ -138,7 +138,7 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryById");
         }
     }
-    public Iterable<HearingAid> findHearingAidByLibraryId(String libraryId)
+    public Iterable<HearingAid> findHearingAidsByLibraryId(String libraryId)
     {
         try {
             return m_hearingAidRepository.findByLibrary(libraryId);
@@ -168,6 +168,22 @@ public class LibraryServiceDataHelper {
             return m_paramRepository.findById(paramId);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findParamById");
+        }
+    }
+    public Optional<User> findUserByEmailAndPassword(String eMail, String password)
+    {
+        try {
+            return m_userRepository.findByeMailAndPassword(eMail, password);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findUserByEmailAndPassword");
+        }
+    }
+    public Iterable<FittingInfo> findFittingInfoByUser(User user)
+    {
+        try {
+            return m_fittingInfoRepository.findByUser(user);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findFittingInfoByUser");
         }
     }
 }

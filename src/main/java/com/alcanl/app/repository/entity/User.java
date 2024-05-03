@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,12 +39,12 @@ public class User {
     @Override
     public boolean equals(Object other)
     {
-        return other instanceof User u && userId == u.userId;
+        return other instanceof User u && userId == u.userId && u.eMail.equals(eMail) && u.password.equals(password);
     }
     @Override
     public int hashCode()
     {
-        return Long.hashCode(userId);
+        return Objects.hash(userId, eMail, password);
     }
     @Override
     public String toString()

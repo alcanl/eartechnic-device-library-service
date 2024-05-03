@@ -1,10 +1,10 @@
 package com.alcanl.app.controller;
 
-import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.LibraryDataService;
 import com.alcanl.app.service.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -36,29 +36,27 @@ public class LibraryServiceController {
         m_requestDateTime = requestDateTime;
     }
 
-    @GetMapping("/hearing/models")
-    public HearingAidDTO getHearingAidByModel(@RequestParam(name = "name")String modelName)
+    @GetMapping("/model")
+    public ResponseEntity<HearingAidDTO> getHearingAidByModel(@RequestParam(name = "name")String modelName)
     {
         printInfo("getHearingAidByModel");
-        var hearingAidDTOOpt = m_libraryDataService.findHearingAidByModelName(modelName);
+        return ResponseEntity.of(m_libraryDataService.findHearingAidByModelName(modelName));
 
-        return hearingAidDTOOpt.orElse(null);
     }
     @GetMapping("/library")
-    public LibraryDTO getLibraryByLibId(@RequestParam(name = "id")String libraryName)
+    public ResponseEntity<LibraryDTO> getLibraryByLibId(@RequestParam(name = "id")String libraryName)
     {
         printInfo("getLibraryByLibId");
-        var libraryOpt = m_libraryDataService.findLibraryById(libraryName);
+        return ResponseEntity.of(m_libraryDataService.findLibraryById(libraryName));
 
-        return libraryOpt.orElse(null);
     }
-    @GetMapping("/library/model/info")
+    @GetMapping("/model/library/info")
     public LibraryToHearingAidsDTO getHearingAidByLibrary(@RequestParam(name = "id")String libraryId)
     {
         printInfo("getHearingAidByLibrary");
         return m_libraryDataService.findHearingAidsByLibrary(libraryId);
     }
-    @GetMapping("/param/model/info")
+    @GetMapping("/model/param/info")
     public ParamToHearingAidsDTO getHearingAidByParam(@RequestParam(name = "id")String paramId)
     {
         printInfo("getHearingAidByParam");
@@ -71,25 +69,76 @@ public class LibraryServiceController {
         var libraryDataOpt = m_libraryDataService.findLibraryDataByHearingAidModel(modelName);
         return libraryDataOpt.orElse(null);
     }
-    @GetMapping("/model/library/info")
-    public LibraryDTO getLibraryInfoByHearingAid(@RequestParam(name = "name")String modelName)
+    @GetMapping("/library/model/info")
+    public ResponseEntity<LibraryDTO> getLibraryInfoByHearingAid(@RequestParam(name = "name")String modelName)
     {
         printInfo("getLibraryInfoByHearingAid");
-        var libraryDataOpt = m_libraryDataService.findLibraryInfoByHearingAidModel(
-                modelName);
+       return  ResponseEntity.of(m_libraryDataService.findLibraryInfoByHearingAidModel(
+                modelName));
 
-        return libraryDataOpt.orElse(null);
     }
     @PostMapping("/save/user")
-    public void saveUser(@RequestBody User user)
+    public UserDTO saveUser(@RequestBody UserDTO userDTO)
     {
         printInfo("saveUser");
-        m_libraryDataService.saveUser(user);
+        m_libraryDataService.saveUser(userDTO);
+
+        return userDTO;
     }
     @PostMapping("/save/fitting")
-    public void saveFittingInfo(@RequestBody FittingInfoSaveDTO fittingInfoSaveDTO)
+    public FittingInfoDTO saveFittingInfo(@RequestBody FittingInfoDTO fittingInfoDTO)
     {
         printInfo("saveFittingInfo");
-        m_libraryDataService.saveFittingInfo(fittingInfoSaveDTO);
+        m_libraryDataService.saveFittingInfo(fittingInfoDTO);
+
+        return fittingInfoDTO;
+    }
+    @PostMapping("/save/param")
+    public ParamDTO saveParam(@RequestBody ParamDTO paramDTO)
+    {
+        printInfo("saveParam");
+        m_libraryDataService.saveParam(paramDTO);
+
+        return paramDTO;
+    }
+    @PostMapping("/save/library")
+    public LibraryDTO saveLibrary(@RequestBody LibraryDTO libraryDTO)
+    {
+        printInfo("saveLibrary");
+        m_libraryDataService.saveLibrary(libraryDTO);
+
+        return libraryDTO;
+    }
+    @PostMapping("/save/hearing")
+    public HearingAidDTO saveHearingAid(@RequestBody HearingAidDTO hearingAidDTO)
+    {
+        printInfo("saveHearingAid");
+        m_libraryDataService.saveHearingAid(hearingAidDTO);
+
+        return hearingAidDTO;
+    }
+    @GetMapping("/user/info")
+    public ResponseEntity<UserDTO> getUser(@RequestParam("email") String eMail, @RequestParam("password") String password)
+    {
+        printInfo("getUserByEMailAndPassword");
+        return ResponseEntity.of(m_libraryDataService.findUserByEmailAndPassword(eMail, password));
+    }
+    @GetMapping("/param/library")
+    public Iterable<ParamDTO> getParamsByLibrary(@RequestBody LibraryDTO libraryDTO)
+    {
+        printInfo("getParamsByLibrary");
+        return m_libraryDataService.findParamsByLibrary(libraryDTO);
+    }
+    @GetMapping("/param/model")
+    public ResponseEntity<ParamDTO> getParamByHearingAid(@RequestParam("name") String modelName)
+    {
+        printInfo("getParamByHearingAid");
+        return ResponseEntity.of(m_libraryDataService.findParamByHearingAid(modelName));
+    }
+    @GetMapping("/param/model/data")
+    public ResponseEntity<byte[]> getParamDataByHearingAid(@RequestParam("name") String modelName)
+    {
+        printInfo("getParamDataByHearingAid");
+        return ResponseEntity.of(m_libraryDataService.findParamDataByHearingAid(modelName));
     }
 }
