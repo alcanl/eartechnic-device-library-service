@@ -16,6 +16,7 @@ public interface IHearingAidMapper {
     {
             var hearingAid = new HearingAid();
             hearingAid.library = library;
+            hearingAid.modelNumber = hearingAidDTO.getModelNumber();
             hearingAid.activeParamId = hearingAidDTO.getActiveParamId();
             hearingAid.defaultParam = param;
             hearingAid.modelName = hearingAidDTO.getModelName();

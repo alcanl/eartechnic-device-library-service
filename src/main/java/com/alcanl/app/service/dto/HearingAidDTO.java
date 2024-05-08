@@ -2,6 +2,7 @@ package com.alcanl.app.service.dto;
 
 public class HearingAidDTO {
     private String m_modelName;
+    private int m_modelNumber;
     private String m_libraryId;
     private String m_defaultParamId;
     private String m_activeParamId;
@@ -20,6 +21,14 @@ public class HearingAidDTO {
     {
         m_activeParamId = activeParamId;
     }
+    public int getModelNumber()
+    {
+        return m_modelNumber;
+    }
+    public void setModelNumber(int modelNumber)
+    {
+        m_modelNumber = modelNumber;
+    }
 
     public String getLibraryId()
     {
@@ -28,7 +37,7 @@ public class HearingAidDTO {
 
     public void setLibraryId(String libraryId)
     {
-        this.m_libraryId = libraryId;
+        m_libraryId = libraryId;
     }
 
     public String getModelName()
@@ -38,7 +47,7 @@ public class HearingAidDTO {
 
     public void setModelName(String hearingAidModel)
     {
-        this.m_modelName = hearingAidModel;
+        m_modelName = hearingAidModel;
     }
 
     public String getDefaultParamId()
@@ -48,7 +57,7 @@ public class HearingAidDTO {
 
     public void setDefaultParamId(String paramId)
     {
-        this.m_defaultParamId = paramId;
+        m_defaultParamId = paramId;
     }
     @Override
     public boolean equals(Object other)

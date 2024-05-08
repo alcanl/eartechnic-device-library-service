@@ -28,7 +28,7 @@ public class LibraryServiceDataHelper {
         m_fittingInfoRepository = fittingInfoRepository;
     }
 
-    public Optional<byte []> findParamDataByHearingAid(HearingAid hearingAid)
+    public Optional<byte []> findDefaultParamDataByHearingAid(HearingAid hearingAid)
     {
         try {
 
@@ -184,6 +184,14 @@ public class LibraryServiceDataHelper {
             return m_fittingInfoRepository.findByUser(user);
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findFittingInfoByUser");
+        }
+    }
+    public Optional<HearingAid> findHearingAidByModelNumber(int modelNumber)
+    {
+        try {
+            return m_hearingAidRepository.findByModelNumber(modelNumber);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByModelNumber");
         }
     }
 }

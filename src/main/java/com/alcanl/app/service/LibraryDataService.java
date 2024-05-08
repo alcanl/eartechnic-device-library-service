@@ -199,14 +199,45 @@ public class LibraryDataService {
             throw new ServiceException("LibraryDataService::findParamByHearingAid", ex);
         }
     }
-    public Optional<byte[]> findParamDataByHearingAid(String modelName)
+    public Optional<byte[]> findDefaultParamDataByHearingAid(String modelName)
     {
         try {
             var hearingAidOpt = m_libraryServiceDataHelper.findHearingAidById(modelName);
 
-            return hearingAidOpt.flatMap(m_libraryServiceDataHelper::findParamDataByHearingAid);
+            return hearingAidOpt.flatMap(m_libraryServiceDataHelper::findDefaultParamDataByHearingAid);
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::findParamDataByHearingAid", ex);
         }
+    }
+    public Optional<byte[]> findActiveParamDataByUser(UserDTO userDTO)
+    {
+        try {
+            var user = m_libraryServiceDataHelper.findUserByEmailAndPassword(userDTO.getEMail(), userDTO.getPassword());
+
+            return user.flatMap(u -> m_libraryServiceDataHelper.findHearingAidById(u.hearingAid.modelName)
+                    .flatMap(ha -> m_libraryServiceDataHelper.findParamById(ha.activeParamId))
+                    .map(p -> p.paramData));
+
+        } catch (RepositoryException | NullPointerException ex ) {
+            throw new ServiceException("LibraryDataService::findParamDataByUser", ex);
+        }
+    }
+    public Optional<HearingAidDTO> findHearingAidByModelNumber(int modelNumber)
+    {
+        try {
+            return m_libraryServiceDataHelper.findHearingAidByModelNumber(modelNumber)
+                    .map(m_hearingAidMapper::toHearingAidDTO);
+
+        } catch (RepositoryException ex) {
+            throw new ServiceException("LibraryDataService::findHearingAidByModelNumber", ex);
+        }
+    }
+    public Optional<String> findHearingAidModelNameByModelNumber(int modelNumber)
+    {
+        return findHearingAidByModelNumber(modelNumber).map(HearingAidDTO::getModelName);
+    }
+    public Optional<Integer> findHearingAidModelNumberByModelName(String modelName)
+    {
+        return findHearingAidByModelName(modelName).map(HearingAidDTO::getModelNumber);
     }
 }
