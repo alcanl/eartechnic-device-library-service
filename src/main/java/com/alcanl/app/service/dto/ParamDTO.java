@@ -1,5 +1,7 @@
 package com.alcanl.app.service.dto;
 
+import org.hibernate.service.spi.ServiceException;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -32,6 +34,9 @@ public class ParamDTO {
 
     public void setParamData(byte[] paramData)
     {
+        if (paramData.length == 0)
+            throw new ServiceException("ParamData is empty!");
+
         m_paramData = paramData;
     }
 

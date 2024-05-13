@@ -1,5 +1,6 @@
 package com.alcanl.app.service.dto;
 
+import org.hibernate.service.spi.ServiceException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -24,6 +25,9 @@ public class LibraryDTO {
     }
     public void setLibraryData(byte[] libraryData)
     {
+        if (libraryData.length == 0)
+            throw new ServiceException("Library data is empty");
+
         m_libraryData = libraryData;
     }
 
