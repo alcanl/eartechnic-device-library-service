@@ -11,7 +11,7 @@ public class HearingAid {
     @Column(name = "hearing_aid_model_name")
     public String modelName;
 
-    @Column(name = "model_number", unique = true)
+    @Column(name = "model_number", unique = true, nullable = false)
     public int modelNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
