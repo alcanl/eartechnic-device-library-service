@@ -1,6 +1,5 @@
 package com.alcanl.app.repository;
 
-import com.alcanl.app.repository.entity.HearingAid;
 import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,7 @@ import java.util.Optional;
 public interface IParamRepository extends CrudRepository<Param, String> {
     Iterable<Param> findByLibrary(Library library);
 
-    @Query(value = "SELECT * FROM param_info pi WHERE pi.param_id = (SELECT param_id FROM hearing_aid ha WHERE ha = :hearingAid)", nativeQuery = true)
-    Optional<Param> findByHearingAid(HearingAid hearingAid);
+    @Query(value = "SELECT * FROM param_info pi WHERE pi.param_id = (SELECT param_id FROM hearing_aid ha WHERE ha.model_number = :modelNumber)", nativeQuery = true)
+    Optional<Param> findByHearingAid(int modelNumber);
 
 }

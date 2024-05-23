@@ -240,4 +240,12 @@ public class LibraryDataService {
     {
         return findHearingAidByModelName(modelName).map(HearingAidDTO::getModelNumber);
     }
+    public Optional<ParamDTO> findDefaultParamByHearingAidModelNumber(int modelNumber)
+    {
+        var hearingAid = m_libraryServiceDataHelper.findHearingAidByModelNumber(modelNumber);
+
+        return hearingAid.flatMap(aid -> m_libraryServiceDataHelper.findDefaultParamByHearingAid(aid)
+                .map(m_paramMapper::toParamDTO));
+
+    }
 }

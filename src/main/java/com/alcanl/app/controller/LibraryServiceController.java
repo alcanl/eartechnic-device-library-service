@@ -130,10 +130,17 @@ public class LibraryServiceController {
         return m_libraryDataService.findParamsByLibrary(libraryDTO);
     }
     @GetMapping("/param/model")
-    public ResponseEntity<ParamDTO> getParamByHearingAid(@RequestParam("name") String modelName)
+    public ResponseEntity<ParamDTO> getParamByHearingAidModelName(@RequestParam("name") String modelName)
     {
         printInfo("getParamByHearingAid");
         return ResponseEntity.of(m_libraryDataService.findParamByHearingAid(modelName));
+    }
+    @GetMapping("/param/model/number")
+    public ResponseEntity<ParamDTO> getDefaultParamByHearingAidModelNumber(@RequestParam("num")int modelNumber)
+    {
+        printInfo("getDefaultParamByHearingAidModelNumber");
+        return ResponseEntity.of(m_libraryDataService.findDefaultParamByHearingAidModelNumber(modelNumber));
+
     }
     @GetMapping("/param/model/data")
     public ResponseEntity<byte[]> getParamDataByHearingAid(@RequestParam("name") String modelName)
