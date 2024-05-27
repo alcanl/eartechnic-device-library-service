@@ -118,7 +118,7 @@ public class LibraryServiceDataHelper {
             return Optional.empty();
 
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName");
+            throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName", ex);
         }
     }
     public Optional<LibraryDTO> findLibraryInfoByHearingAidModelName(String modelName)
@@ -136,7 +136,7 @@ public class LibraryServiceDataHelper {
             return Optional.empty();
 
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName");
+            throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName", ex);
         }
     }
     public Optional<Library> findLibraryById(String name)
@@ -144,7 +144,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_libraryRepository.findById(name);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findLibraryById");
+            throw new RepositoryException("LibraryServiceDataHelper::findLibraryById", ex);
         }
     }
     public Iterable<HearingAid> findHearingAidsByLibraryId(String libraryId)
@@ -152,7 +152,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findByLibrary(libraryId);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByLibraryId");
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByLibraryId", ex);
         }
     }
     public Iterable<HearingAid> findHearingAidByParamId(String paramId)
@@ -160,7 +160,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findByParam(paramId);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByParamId");
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByParamId", ex);
         }
     }
     public Optional<HearingAid> findHearingAidById(String modelName)
@@ -168,7 +168,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findById(modelName);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidById");
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidById", ex);
         }
     }
     public Optional<Param> findParamById(String paramId)
@@ -176,7 +176,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_paramRepository.findById(paramId);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findParamById");
+            throw new RepositoryException("LibraryServiceDataHelper::findParamById", ex);
         }
     }
     public Optional<User> findUserByEmailAndPassword(String eMail, String password)
@@ -184,7 +184,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_userRepository.findByeMailAndPassword(eMail, password);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findUserByEmailAndPassword");
+            throw new RepositoryException("LibraryServiceDataHelper::findUserByEmailAndPassword", ex);
         }
     }
     public Iterable<FittingInfo> findFittingInfoByUser(User user)
@@ -192,15 +192,17 @@ public class LibraryServiceDataHelper {
         try {
             return m_fittingInfoRepository.findByUser(user);
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findFittingInfoByUser");
+            throw new RepositoryException("LibraryServiceDataHelper::findFittingInfoByUser", ex);
         }
     }
     public Optional<HearingAid> findHearingAidByModelNumber(int modelNumber)
     {
         try {
-            return m_hearingAidRepository.findByModelNumber(modelNumber);
+            return m_hearingAidRepository.findModelNameByModelNumber(modelNumber)
+                    .flatMap(m_hearingAidRepository::findById);
+
         } catch (Throwable ex) {
-            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByModelNumber");
+            throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByModelNumber", ex);
         }
     }
 }

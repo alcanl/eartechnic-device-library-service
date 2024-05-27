@@ -6,13 +6,33 @@ public class HearingAidDTO {
     private String m_libraryId;
     private String m_defaultParamId;
     private String m_activeParamId;
-    public HearingAidDTO(String hearingAidModel, String libraryId, String paramId)
+    private int m_WdrcChannelCount;
+    private int m_FrequencyChannelCount;
+    public HearingAidDTO(String hearingAidModel, String libraryId, String defaultParamId, int wdrcChannelCount, int frequencyChannelCount)
     {
         m_modelName = hearingAidModel;
         m_libraryId = libraryId;
-        m_defaultParamId = paramId;
+        m_defaultParamId = defaultParamId;
+        m_WdrcChannelCount = wdrcChannelCount;
+        m_FrequencyChannelCount = frequencyChannelCount;
     }
     public HearingAidDTO() {}
+    public int getWdrcChannelCount()
+    {
+        return m_WdrcChannelCount;
+    }
+    public void setWdrcChannelCount(int count)
+    {
+        m_WdrcChannelCount = count;
+    }
+    public int getFrequencyChannelCount()
+    {
+        return m_FrequencyChannelCount;
+    }
+    public void setFrequencyChannelCount(int count)
+    {
+        m_FrequencyChannelCount = count;
+    }
     public String getActiveParamId()
     {
         return m_activeParamId;

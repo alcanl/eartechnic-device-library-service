@@ -20,6 +20,8 @@ public interface IHearingAidMapper {
             hearingAid.activeParamId = hearingAidDTO.getActiveParamId();
             hearingAid.defaultParam = param;
             hearingAid.modelName = hearingAidDTO.getModelName();
+            hearingAid.wdrcChannelCount = hearingAidDTO.getWdrcChannelCount();
+            hearingAid.frequencyChannelCount = hearingAidDTO.getFrequencyChannelCount();
             return hearingAid;
 
     }

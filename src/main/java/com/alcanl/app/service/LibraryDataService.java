@@ -91,7 +91,7 @@ public class LibraryDataService {
             var hearingAidList = new LibraryToHearingAidsDTO();
             m_libraryServiceDataHelper.findHearingAidsByLibraryId(libraryId)
                     .forEach(ha -> hearingAidList.hearingAids.add(new HearingAidDTO(
-                            ha.modelName, ha.library.libId, ha.defaultParam.paramId)));
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount)));
 
             return hearingAidList;
 
@@ -107,7 +107,7 @@ public class LibraryDataService {
 
             m_libraryServiceDataHelper.findHearingAidByParamId(paramId)
                     .forEach(ha -> hearingAidList.hearingAidDTOs.add(new HearingAidDTO(
-                            ha.modelName, ha.library.libId, ha.defaultParam.paramId)));
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount)));
 
             return hearingAidList;
 
@@ -119,8 +119,8 @@ public class LibraryDataService {
     public Optional<HearingAidDTO> findHearingAidByModelName(String hearingAidModelName)
     {
         try {
-            return m_libraryServiceDataHelper.findHearingAidById(hearingAidModelName).map(
-                    m_hearingAidMapper::toHearingAidDTO);
+            return m_libraryServiceDataHelper.findHearingAidById(hearingAidModelName)
+                    .map(m_hearingAidMapper::toHearingAidDTO);
 
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::findHearingAidByModelName", ex);
