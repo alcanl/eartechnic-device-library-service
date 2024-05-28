@@ -23,7 +23,7 @@ public class Param {
     @Override
     public boolean equals(Object other)
     {
-        return other instanceof Param p && p.paramId == paramId;
+        return other instanceof Param p && p.paramId.equals(paramId);
     }
     @Override
     public int hashCode()

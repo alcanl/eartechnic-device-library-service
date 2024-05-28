@@ -14,11 +14,11 @@ public class HearingAid {
     @Column(name = "model_number", unique = true, nullable = false)
     public int modelNumber;
 
-    @Column(name = "wide_dynamic_range_compressor_count")
-    public Integer wdrcChannelCount ;
+    @Column(name = "wide_dynamic_range_compressor_count", nullable = false)
+    public int wdrcChannelCount ;
 
-    @Column(name = "frequency_channel_count")
-    public Integer frequencyChannelCount;
+    @Column(name = "frequency_channel_count", nullable = false)
+    public int frequencyChannelCount;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "libId", nullable = false)
