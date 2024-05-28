@@ -3,6 +3,7 @@ package com.alcanl.app.controller;
 import com.alcanl.app.service.LibraryDataService;
 import com.alcanl.app.service.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
+import static com.alcanl.app.global.Global.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,12 +79,16 @@ public class LibraryServiceController {
 
     }
     @PostMapping("/save/user")
-    public UserDTO saveUser(@RequestBody UserDTO userDTO)
+    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO)
     {
         printInfo("saveUser");
-        m_libraryDataService.saveUser(userDTO);
 
-        return userDTO;
+        if (userDTO.getPassword().length() < 8 || !isValid(userDTO.getEMail()))
+            return ResponseEntity.badRequest().build();
+
+        return m_libraryDataService.saveUser(userDTO)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+
     }
     @PostMapping("/save/fitting")
     public FittingInfoDTO saveFittingInfo(@RequestBody FittingInfoDTO fittingInfoDTO)
@@ -94,28 +99,27 @@ public class LibraryServiceController {
         return fittingInfoDTO;
     }
     @PostMapping("/save/param")
-    public ParamDTO saveParam(@RequestBody ParamDTO paramDTO)
+    public ResponseEntity<ParamDTO> saveParam(@RequestBody ParamDTO paramDTO)
     {
         printInfo("saveParam");
-        m_libraryDataService.saveParam(paramDTO);
-
-        return paramDTO;
+        return m_libraryDataService.saveParam(paramDTO)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
     @PostMapping("/save/library")
-    public LibraryDTO saveLibrary(@RequestBody LibraryDTO libraryDTO)
+    public ResponseEntity<LibraryDTO> saveLibrary(@RequestBody LibraryDTO libraryDTO)
     {
         printInfo("saveLibrary");
-        m_libraryDataService.saveLibrary(libraryDTO);
+        return m_libraryDataService.saveLibrary(libraryDTO)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
 
-        return libraryDTO;
     }
     @PostMapping("/save/hearing")
-    public HearingAidDTO saveHearingAid(@RequestBody HearingAidDTO hearingAidDTO)
+    public ResponseEntity<HearingAidDTO> saveHearingAid(@RequestBody HearingAidDTO hearingAidDTO)
     {
         printInfo("saveHearingAid");
-        m_libraryDataService.saveHearingAid(hearingAidDTO);
+        return m_libraryDataService.saveHearingAid(hearingAidDTO)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
 
-        return hearingAidDTO;
     }
     @GetMapping("/user/info")
     public ResponseEntity<UserDTO> getUser(@RequestParam("email") String eMail, @RequestParam("password") String password)

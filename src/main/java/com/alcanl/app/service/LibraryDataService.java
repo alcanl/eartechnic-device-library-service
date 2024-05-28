@@ -38,15 +38,15 @@ public class LibraryDataService {
             throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
         }
     }
-    public void saveUser(UserDTO userDTO)
+    public Optional<UserDTO> saveUser(UserDTO userDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveUser(m_userMapper.toUser(userDTO));
+            return m_libraryServiceDataHelper.saveUser(m_userMapper.toUser(userDTO)).map(m_userMapper::toUserDTO);
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveUser", ex);
         }
     }
-    public void saveHearingAid(HearingAidDTO hearingAidDTO)
+    public Optional<HearingAidDTO> saveHearingAid(HearingAidDTO hearingAidDTO)
     {
         try {
             var libOpt = m_libraryServiceDataHelper.findLibraryById(hearingAidDTO.getLibraryId());
@@ -54,15 +54,18 @@ public class LibraryDataService {
             var activeParamOpt = m_libraryServiceDataHelper.findParamById(hearingAidDTO.getActiveParamId());
 
             if (libOpt.isPresent() && defaultParamOpt.isPresent() && activeParamOpt.isPresent())
-                m_libraryServiceDataHelper.saveHearingAid(
-                        m_hearingAidMapper.toHearingAid(hearingAidDTO, libOpt.get(), defaultParamOpt.get())
-                );
+                return m_libraryServiceDataHelper.saveHearingAid(
+                        m_hearingAidMapper.toHearingAid(
+                                hearingAidDTO, libOpt.get(), defaultParamOpt.get()))
+                        .map(m_hearingAidMapper::toHearingAidDTO);
+
+            return Optional.empty();
 
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveHearingAid", ex);
         }
     }
-    public void saveParam(ParamDTO paramDTO)
+    public Optional<ParamDTO> saveParam(ParamDTO paramDTO)
     {
         try {
             var library = m_libraryServiceDataHelper.findLibraryById(paramDTO.getLibraryName());
@@ -71,16 +74,17 @@ public class LibraryDataService {
                     library.orElseThrow(() ->
                             new ServiceException("LibraryDataService::saveParam, Undefined Library")));
 
-            m_libraryServiceDataHelper.saveParam(param);
+            return m_libraryServiceDataHelper.saveParam(param).map(m_paramMapper::toParamDTO);
 
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveParam", ex);
         }
     }
-    public void saveLibrary(LibraryDTO libraryDTO)
+    public Optional<LibraryDTO> saveLibrary(LibraryDTO libraryDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveLibrary(m_libraryMapper.toLibrary(libraryDTO));
+            return m_libraryServiceDataHelper.saveLibrary(m_libraryMapper.toLibrary(libraryDTO))
+                    .map(m_libraryMapper::toLibraryDTO);
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveLibrary", ex);
         }

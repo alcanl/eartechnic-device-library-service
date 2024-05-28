@@ -67,10 +67,13 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::getLibraryParam", ex);
         }
     }
-    public void saveUser(User user)
+    public Optional<User> saveUser(User user)
     {
         try {
-            m_userRepository.save(user);
+            if (m_userRepository.existsById(user.userId))
+                return Optional.empty();
+
+            return Optional.of(m_userRepository.save(user));
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveUser", ex);
         }
@@ -83,26 +86,35 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::saveFittingInfo", ex);
         }
     }
-    public void saveHearingAid(HearingAid hearingAid)
+    public Optional<HearingAid> saveHearingAid(HearingAid hearingAid)
     {
         try {
-            m_hearingAidRepository.save(hearingAid);
+            return m_hearingAidRepository.existsById(hearingAid.modelName) ? Optional.empty()
+                    : Optional.of(m_hearingAidRepository.save(hearingAid));
+
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveHearingAid", ex);
         }
     }
-    public void saveLibrary(Library library)
+    public Optional<Library> saveLibrary(Library library)
     {
         try {
-            m_libraryRepository.save(library);
+            if (m_libraryRepository.existsById(library.libId))
+                return Optional.empty();
+
+            return Optional.of(m_libraryRepository.save(library));
+
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveLibrary", ex);
         }
     }
-    public void saveParam(Param param)
+    public Optional<Param> saveParam(Param param)
     {
         try {
-            m_paramRepository.save(param);
+            if (m_paramRepository.existsById(param.paramId))
+                return Optional.empty();
+
+            return Optional.of(m_paramRepository.save(param));
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveParam", ex);
         }
