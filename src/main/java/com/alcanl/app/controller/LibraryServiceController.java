@@ -152,7 +152,7 @@ public class LibraryServiceController {
         printInfo("getParamDataByHearingAid");
         return ResponseEntity.of(m_libraryDataService.findDefaultParamDataByHearingAid(modelName));
     }
-    @GetMapping("user/param/active")
+    @GetMapping("/user/param/active")
     public ResponseEntity<byte[]> getActiveParamDataByUser(@RequestParam("email")String eMail,
                                                            @RequestParam("password")String password)
     {
@@ -163,19 +163,19 @@ public class LibraryServiceController {
 
         return ResponseEntity.of(m_libraryDataService.findActiveParamDataByUser(userDTO));
     }
-    @GetMapping("model/number")
-    public ResponseEntity<HearingAidDTO> getHearingAidByModelNumber(@RequestParam("number")int modelNumber)
+    @GetMapping("/model")
+    public ResponseEntity<HearingAidDTO> getHearingAidByModelNumber(@RequestParam("num")int modelNumber)
     {
         printInfo("getHearingAidByModelNumber");
         return ResponseEntity.of(m_libraryDataService.findHearingAidByModelNumber(modelNumber));
     }
-    @GetMapping("model/number/name")
+    @GetMapping("/model/number/name")
     public ResponseEntity<String> getHearingAidModelNameByModelNumber(@RequestParam("number")int modelNumber)
     {
         printInfo("getHearingAidModelNameByModelNumber");
         return ResponseEntity.of(m_libraryDataService.findHearingAidModelNameByModelNumber(modelNumber));
     }
-    @GetMapping("model/name/number")
+    @GetMapping("/model/name/number")
     public ResponseEntity<Integer> getHearingAidModelNumberByModelName(@RequestParam("name")String modelName)
     {
         printInfo("getHearingAidModelNumberByModelName");
