@@ -14,6 +14,10 @@ public interface IHearingAidMapper {
 
     default HearingAid toHearingAid(HearingAidDTO hearingAidDTO, Library library, Param param)
     {
+        if (library == null || param == null)
+            return null;
+
+        else {
             var hearingAid = new HearingAid();
             hearingAid.library = library;
             hearingAid.modelNumber = hearingAidDTO.getModelNumber();
@@ -23,7 +27,7 @@ public interface IHearingAidMapper {
             hearingAid.wdrcChannelCount = hearingAidDTO.getWdrcChannelCount();
             hearingAid.frequencyChannelCount = hearingAidDTO.getFrequencyChannelCount();
             return hearingAid;
-
+        }
     }
 
     @Mapping(source = "defaultParam", target = "defaultParamId", qualifiedBy = ParamToParamNameConverter.class)

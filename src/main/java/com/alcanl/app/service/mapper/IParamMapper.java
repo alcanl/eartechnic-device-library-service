@@ -15,6 +15,9 @@ public interface IParamMapper {
 
     default Param toParam(ParamDTO dto, Library library)
     {
+        if (library == null)
+            return null;
+
         Param param = new Param();
         param.paramId = dto.getParamId();
         param.library = library;

@@ -2,8 +2,11 @@ package com.alcanl.app.service.mapper;
 
 import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
+import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.mapper.converter.LibraryToLibraryNameConverter;
+import com.alcanl.app.service.mapper.converter.ParamToParamFileConverter;
 import com.alcanl.app.service.mapper.converter.ParamToParamNameConverter;
+import com.alcanl.app.service.mapper.converter.UserToUserIdConverter;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -21,9 +24,15 @@ public interface ICommonMapper {
         return param.paramId;
     }
 
-    @ParamToParamNameConverter
+    @ParamToParamFileConverter
     default byte[] paramToParamFile(Param param)
     {
         return param.paramData;
     }
+    @UserToUserIdConverter
+    default long userToUserId(User user)
+    {
+        return user.userId;
+    }
+
 }

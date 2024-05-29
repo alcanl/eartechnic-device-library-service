@@ -78,10 +78,10 @@ public class LibraryServiceDataHelper {
             throw new RepositoryException("LibraryServiceDataHelper::saveUser", ex);
         }
     }
-    public void saveFittingInfo(FittingInfo fittingInfo)
+    public Optional<FittingInfo> saveFittingInfo(FittingInfo fittingInfo)
     {
         try {
-            m_fittingInfoRepository.save(fittingInfo);
+            return Optional.of(m_fittingInfoRepository.save(fittingInfo));
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::saveFittingInfo", ex);
         }
@@ -215,6 +215,14 @@ public class LibraryServiceDataHelper {
 
         } catch (Throwable ex) {
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByModelNumber", ex);
+        }
+    }
+    public Optional<User> findByUserId(long id)
+    {
+        try {
+            return m_userRepository.findById(id);
+        } catch (Throwable ex) {
+            throw new RepositoryException("LibraryServiceDataHelper::findByUserId", ex);
         }
     }
 }

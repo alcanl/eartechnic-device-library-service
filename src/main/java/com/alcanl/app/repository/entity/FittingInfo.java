@@ -16,6 +16,9 @@ public class FittingInfo {
     @JoinColumn(name = "userId")
     public User user;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "fittingInfo", cascade = CascadeType.ALL)
+    public Param savedParam;
+
     @Column(name = "fitting_info_date")
     public LocalDateTime fittingDate = LocalDateTime.now();
 

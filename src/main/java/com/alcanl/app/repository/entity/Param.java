@@ -17,6 +17,10 @@ public class Param {
     @JoinColumn(name = "libId", nullable = false)
     public Library library;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "savedParam")
+    public FittingInfo fittingInfo;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "defaultParam", cascade = CascadeType.ALL)
     public Set<HearingAid> hearingAid;
 

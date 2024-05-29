@@ -91,12 +91,12 @@ public class LibraryServiceController {
 
     }
     @PostMapping("/save/fitting")
-    public FittingInfoDTO saveFittingInfo(@RequestBody FittingInfoDTO fittingInfoDTO)
+    public ResponseEntity<FittingInfoDTO> saveFittingInfo(@RequestBody FittingInfoDTO fittingInfoDTO)
     {
         printInfo("saveFittingInfo");
-        m_libraryDataService.saveFittingInfo(fittingInfoDTO);
+        return m_libraryDataService.saveFittingInfo(fittingInfoDTO)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
 
-        return fittingInfoDTO;
     }
     @PostMapping("/save/param")
     public ResponseEntity<ParamDTO> saveParam(@RequestBody ParamDTO paramDTO)
@@ -163,7 +163,7 @@ public class LibraryServiceController {
 
         return ResponseEntity.of(m_libraryDataService.findActiveParamDataByUser(userDTO));
     }
-    @GetMapping("/model")
+    @GetMapping("/model/number")
     public ResponseEntity<HearingAidDTO> getHearingAidByModelNumber(@RequestParam("num")int modelNumber)
     {
         printInfo("getHearingAidByModelNumber");

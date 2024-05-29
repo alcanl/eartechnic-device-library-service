@@ -30,10 +30,19 @@ public class LibraryDataService {
         m_hearingAidMapper = hearingAidMapper;
         m_userMapper = userMapper;
     }
-    public void saveFittingInfo(FittingInfoDTO fittingInfoDTO)
+    public Optional<FittingInfoDTO> saveFittingInfo(FittingInfoDTO fittingInfoDTO)
     {
         try {
-            m_libraryServiceDataHelper.saveFittingInfo(m_fittingInfoMapper.toFittingInfo(fittingInfoDTO));
+            var userOpt = m_libraryServiceDataHelper.findByUserId(fittingInfoDTO.getUserId());
+            var paramOpt = m_libraryServiceDataHelper.findParamById(fittingInfoDTO.getParamId());
+
+            if (userOpt.isPresent() && paramOpt.isPresent())
+                return m_libraryServiceDataHelper.saveFittingInfo(m_fittingInfoMapper.toFittingInfo(
+                        fittingInfoDTO, paramOpt.get(), userOpt.get()))
+                        .map(m_fittingInfoMapper::toFittingInfoDTO);
+
+            return Optional.empty();
+
         } catch (RepositoryException ex) {
             throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
         }
