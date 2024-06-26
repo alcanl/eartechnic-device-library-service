@@ -4,13 +4,15 @@ import com.alcanl.app.service.LibraryDataService;
 import com.alcanl.app.service.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import static com.alcanl.app.global.Global.*;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @RestController
 @RequestMapping("api/ear-technic")
 @Scope("request")
@@ -25,7 +27,7 @@ public class LibraryServiceController {
         var remotePort = m_httpServletRequest.getRemotePort();
         var localPort = m_httpServletRequest.getLocalPort();
 
-        System.out.printf("%s\nClient Ip Address : %s\nClient Remote Port: %d\nClient Local Port: %d\nClient Request Time: %s\n\n",
+        log.info("{}\nClient Ip Address : {}\nClient Remote Port: {}\nClient Local Port: {}\nClient Request Time: {}\n\n",
                 request, host, remotePort, localPort, m_requestDateTime);
 
     }
