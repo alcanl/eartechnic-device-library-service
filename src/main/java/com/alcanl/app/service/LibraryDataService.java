@@ -4,12 +4,14 @@ import com.alcanl.app.repository.dal.LibraryServiceDataHelper;
 import com.alcanl.app.service.dto.*;
 import com.alcanl.app.service.mapper.*;
 import com.karandev.util.data.repository.exception.RepositoryException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @Service
 public class LibraryDataService {
     private final LibraryServiceDataHelper m_libraryServiceDataHelper;
@@ -33,7 +35,7 @@ public class LibraryDataService {
     public Optional<FittingInfoDTO> saveFittingInfo(FittingInfoDTO fittingInfoDTO)
     {
         try {
-            var userOpt = m_libraryServiceDataHelper.findByUserId(fittingInfoDTO.getUserId());
+            var userOpt = m_libraryServiceDataHelper.findUserById(fittingInfoDTO.getUserId());
             var paramOpt = m_libraryServiceDataHelper.findParamById(fittingInfoDTO.getParamId());
 
             if (userOpt.isPresent() && paramOpt.isPresent())
@@ -44,6 +46,7 @@ public class LibraryDataService {
             return Optional.empty();
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, saveFittingInfo: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
         }
     }
@@ -52,6 +55,7 @@ public class LibraryDataService {
         try {
             return m_libraryServiceDataHelper.saveUser(m_userMapper.toUser(userDTO)).map(m_userMapper::toUserDTO);
         } catch (RepositoryException ex) {
+            log.error("Error in service, saveUser: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveUser", ex);
         }
     }
@@ -71,6 +75,7 @@ public class LibraryDataService {
             return Optional.empty();
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, saveHearingAid: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveHearingAid", ex);
         }
     }
@@ -86,6 +91,7 @@ public class LibraryDataService {
             return m_libraryServiceDataHelper.saveParam(param).map(m_paramMapper::toParamDTO);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, saveParam: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveParam", ex);
         }
     }
@@ -95,6 +101,7 @@ public class LibraryDataService {
             return m_libraryServiceDataHelper.saveLibrary(m_libraryMapper.toLibrary(libraryDTO))
                     .map(m_libraryMapper::toLibraryDTO);
         } catch (RepositoryException ex) {
+            log.error("Error in service, saveLibrary: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveLibrary", ex);
         }
     }
@@ -109,6 +116,7 @@ public class LibraryDataService {
             return hearingAidList;
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findHearingAidsByLibrary: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findHearingAidsByLibrary", ex);
         }
     }
@@ -125,6 +133,7 @@ public class LibraryDataService {
             return hearingAidList;
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findHearingAidsByParam: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findHearingAidsByParam", ex);
         }
     }
@@ -136,6 +145,7 @@ public class LibraryDataService {
                     .map(m_hearingAidMapper::toHearingAidDTO);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findHearingAidByModelName: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findHearingAidByModelName", ex);
         }
     }
@@ -147,6 +157,7 @@ public class LibraryDataService {
                     m_libraryMapper::toLibraryDTO);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findLibraryById: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findLibraryById", ex);
         }
     }
@@ -156,15 +167,18 @@ public class LibraryDataService {
             return m_libraryServiceDataHelper.findLibraryDataByHearingAidModelName(hearingAidModel);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findLibraryDataByHearingAidModel: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
         }
     }
     public Optional<LibraryDTO> findLibraryInfoByHearingAidModel(String hearingAidModel)
     {
         try {
-            return m_libraryServiceDataHelper.findLibraryInfoByHearingAidModelName(hearingAidModel);
+            return m_libraryServiceDataHelper.findLibraryByHearingAidModelName(hearingAidModel)
+                    .map(m_libraryMapper::toLibraryDTO);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findLibraryInfoByHearingAidModel: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findLibraryByHearingAidModel", ex);
         }
     }
@@ -173,6 +187,7 @@ public class LibraryDataService {
         try {
             return m_libraryServiceDataHelper.findUserByEmailAndPassword(eMail, password).map(m_userMapper::toUserDTO);
         } catch (RepositoryException ex) {
+            log.error("Error in service, findUserByEmailAndPassword: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findUserByEmailAndPassword", ex);
         }
     }
@@ -187,6 +202,7 @@ public class LibraryDataService {
                     .spliterator(), false).map(m_fittingInfoMapper::toFittingInfoDTO).toList()).orElse(null);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findFittingInfoByUser: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findFittingInfoByUser", ex);
         }
     }
@@ -198,6 +214,7 @@ public class LibraryDataService {
             return libOpt.map(library -> StreamSupport.stream(m_libraryServiceDataHelper.findParamsByLibrary(library).spliterator()
             , false).map(m_paramMapper::toParamDTO).toList()).orElse(null);
         } catch (RepositoryException ex) {
+            log.error("Error in service, findParamsByLibrary: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findParamsByLibrary", ex);
         }
     }
@@ -209,6 +226,7 @@ public class LibraryDataService {
             return hearingAidOpt.flatMap(hearingAid -> m_libraryServiceDataHelper.findParamByHearingAid(hearingAid).map(m_paramMapper::toParamDTO));
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findParamByHearingAid: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findParamByHearingAid", ex);
         }
     }
@@ -219,6 +237,7 @@ public class LibraryDataService {
 
             return hearingAidOpt.flatMap(m_libraryServiceDataHelper::findDefaultParamDataByHearingAid);
         } catch (RepositoryException ex) {
+            log.error("Error in service, findDefaultParamDataByHearingAid: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findParamDataByHearingAid", ex);
         }
     }
@@ -232,6 +251,7 @@ public class LibraryDataService {
                     .map(p -> p.paramData));
 
         } catch (RepositoryException | NullPointerException ex ) {
+            log.error("Error in service, findActiveParamDataByUser: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findParamDataByUser", ex);
         }
     }
@@ -242,6 +262,7 @@ public class LibraryDataService {
                     .map(m_hearingAidMapper::toHearingAidDTO);
 
         } catch (RepositoryException ex) {
+            log.error("Error in service, findHearingAidByModelNumber: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::findHearingAidByModelNumber", ex);
         }
     }

@@ -6,11 +6,12 @@ import com.alcanl.app.repository.IParamRepository;
 import com.alcanl.app.repository.IUserRepository;
 import com.alcanl.app.repository.entity.*;
 import com.alcanl.app.repository.IFittingInfoRepository;
-import com.alcanl.app.service.dto.LibraryDTO;
 import com.karandev.util.data.repository.exception.RepositoryException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class LibraryServiceDataHelper {
     private final IHearingAidRepository m_hearingAidRepository;
@@ -37,6 +38,8 @@ public class LibraryServiceDataHelper {
             return libOpt.map(param -> param.paramData);
 
         } catch (Throwable ex) {
+
+            log.error("Error finding default param data by hearing aid: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::getHearingAidParams", ex);
         }
     }
@@ -46,6 +49,7 @@ public class LibraryServiceDataHelper {
             return m_paramRepository.findByHearingAid(hearingAid.modelNumber);
 
         } catch (Throwable ex) {
+            log.error("Error finding default param by hearing aid: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::getHearingAidParams", ex);
         }
     }
@@ -55,6 +59,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_paramRepository.findByHearingAid(hearingAid.modelNumber);
         } catch (Throwable ex) {
+            log.error("Error finding param by hearing aid: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::getHearingAidParam", ex);
         }
     }
@@ -64,6 +69,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_paramRepository.findByLibrary(library);
         } catch (Throwable ex) {
+            log.error("Error finding params by library: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::getLibraryParam", ex);
         }
     }
@@ -75,6 +81,7 @@ public class LibraryServiceDataHelper {
 
             return Optional.of(m_userRepository.save(user));
         } catch (Throwable ex) {
+            log.error("Error saving user: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::saveUser", ex);
         }
     }
@@ -83,6 +90,7 @@ public class LibraryServiceDataHelper {
         try {
             return Optional.of(m_fittingInfoRepository.save(fittingInfo));
         } catch (Throwable ex) {
+            log.error("Error saving fitting info: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::saveFittingInfo", ex);
         }
     }
@@ -93,6 +101,7 @@ public class LibraryServiceDataHelper {
                     : Optional.of(m_hearingAidRepository.save(hearingAid));
 
         } catch (Throwable ex) {
+            log.error("Error saving hearing aid: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::saveHearingAid", ex);
         }
     }
@@ -105,6 +114,7 @@ public class LibraryServiceDataHelper {
             return Optional.of(m_libraryRepository.save(library));
 
         } catch (Throwable ex) {
+            log.error("Error saving library: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::saveLibrary", ex);
         }
     }
@@ -116,6 +126,7 @@ public class LibraryServiceDataHelper {
 
             return Optional.of(m_paramRepository.save(param));
         } catch (Throwable ex) {
+            log.error("Error saving param: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::saveParam", ex);
         }
     }
@@ -130,24 +141,18 @@ public class LibraryServiceDataHelper {
             return Optional.empty();
 
         } catch (Throwable ex) {
+            log.error("Error finding library data by hearing aid model name: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName", ex);
         }
     }
-    public Optional<LibraryDTO> findLibraryInfoByHearingAidModelName(String modelName)
+    public Optional<Library> findLibraryByHearingAidModelName(String modelName)
     {
         try {
-            var libDataOpt = m_libraryRepository.findLibraryDataByHearingAidModel(modelName);
-            var libIdOpt = m_libraryRepository.findLibraryIdByHearingAidModel(modelName);
-
-            if (libDataOpt.isPresent() && libIdOpt.isPresent()) {
-                var libraryDTO = new LibraryDTO(libDataOpt.get(), libIdOpt.get());
-
-                return Optional.of(libraryDTO);
-            }
-
-            return Optional.empty();
+           return m_libraryRepository.findLibraryIdByHearingAidModel(modelName)
+                   .flatMap(m_libraryRepository::findById);
 
         } catch (Throwable ex) {
+            log.error("Error finding library by hearing aid model name: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryByHearingAidModelName", ex);
         }
     }
@@ -156,6 +161,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_libraryRepository.findById(name);
         } catch (Throwable ex) {
+            log.error("Error finding library by id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findLibraryById", ex);
         }
     }
@@ -164,6 +170,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findByLibrary(libraryId);
         } catch (Throwable ex) {
+            log.error("Error finding hearing aids by library id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByLibraryId", ex);
         }
     }
@@ -172,6 +179,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findByParam(paramId);
         } catch (Throwable ex) {
+            log.error("Error finding hearing aids by param id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByParamId", ex);
         }
     }
@@ -180,6 +188,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_hearingAidRepository.findById(modelName);
         } catch (Throwable ex) {
+            log.error("Error finding hearing aid by id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidById", ex);
         }
     }
@@ -188,6 +197,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_paramRepository.findById(paramId);
         } catch (Throwable ex) {
+            log.error("Error finding param by id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findParamById", ex);
         }
     }
@@ -196,6 +206,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_userRepository.findByeMailAndPassword(eMail, password);
         } catch (Throwable ex) {
+            log.error("Error finding user by email and password: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findUserByEmailAndPassword", ex);
         }
     }
@@ -204,6 +215,7 @@ public class LibraryServiceDataHelper {
         try {
             return m_fittingInfoRepository.findByUser(user);
         } catch (Throwable ex) {
+            log.error("Error finding fitting info by user: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findFittingInfoByUser", ex);
         }
     }
@@ -214,14 +226,16 @@ public class LibraryServiceDataHelper {
                     .flatMap(m_hearingAidRepository::findById);
 
         } catch (Throwable ex) {
+            log.error("Error finding hearing aid by model number: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findHearingAidByModelNumber", ex);
         }
     }
-    public Optional<User> findByUserId(long id)
+    public Optional<User> findUserById(long id)
     {
         try {
             return m_userRepository.findById(id);
         } catch (Throwable ex) {
+            log.error("Error finding user by id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findByUserId", ex);
         }
     }
