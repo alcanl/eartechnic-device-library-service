@@ -27,7 +27,7 @@ public class LibraryServiceController {
         var remotePort = m_httpServletRequest.getRemotePort();
         var localPort = m_httpServletRequest.getLocalPort();
 
-        log.info("{}\nClient Ip Address : {}\nClient Remote Port: {}\nClient Local Port: {}\nClient Request Time: {}\n\n",
+        log.info("\n{}\nClient Ip Address : {}\nClient Remote Port: {}\nClient Local Port: {}\nClient Request Time: {}\n\n",
                 request, host, remotePort, localPort, m_requestDateTime);
 
     }
