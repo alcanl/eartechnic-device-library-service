@@ -1,15 +1,14 @@
 package com.alcanl.app.service.dto;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class FittingInfoDTO {
 
     private String m_savedParamId;
     private long m_userId;
-    private LocalDateTime m_fittingDate;
+    private String m_fittingDate;
 
-    public FittingInfoDTO(String paramId, long userId, LocalDateTime fittingDate)
+    public FittingInfoDTO(String paramId, long userId, String fittingDate)
     {
         m_savedParamId = paramId;
         m_userId = userId;
@@ -25,12 +24,12 @@ public class FittingInfoDTO {
         return m_userId;
     }
 
-    public LocalDateTime getFittingDate()
+    public String getFittingDate()
     {
         return m_fittingDate;
     }
 
-    public void setFittingDate(LocalDateTime fittingDate)
+    public void setFittingDate(String fittingDate)
     {
         m_fittingDate = fittingDate;
     }

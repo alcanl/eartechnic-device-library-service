@@ -1,12 +1,10 @@
 package com.alcanl.app.service.mapper;
 
+import com.alcanl.app.repository.entity.HearingAid;
 import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
 import com.alcanl.app.repository.entity.User;
-import com.alcanl.app.service.mapper.converter.LibraryToLibraryNameConverter;
-import com.alcanl.app.service.mapper.converter.ParamToParamFileConverter;
-import com.alcanl.app.service.mapper.converter.ParamToParamNameConverter;
-import com.alcanl.app.service.mapper.converter.UserToUserIdConverter;
+import com.alcanl.app.service.mapper.converter.*;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -34,5 +32,8 @@ public interface ICommonMapper {
     {
         return user.userId;
     }
+
+    @HearingAidToModelNumberConverter
+    default int modelNumberToModelNumber(HearingAid hearingAid) { return hearingAid.modelNumber; }
 
 }

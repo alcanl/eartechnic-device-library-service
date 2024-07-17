@@ -9,7 +9,7 @@ public class FittingInfo {
 
     @Id
     @Column(name = "fitting_info_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long fittingId;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -20,7 +20,7 @@ public class FittingInfo {
     public Param savedParam;
 
     @Column(name = "fitting_info_date")
-    public LocalDateTime fittingDate = LocalDateTime.now();
+    public LocalDateTime fittingDate;
 
     @Override
     public boolean equals(Object other)

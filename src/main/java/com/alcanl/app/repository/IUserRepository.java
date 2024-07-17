@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public interface IUserRepository extends CrudRepository<User, Long> {
 
+    boolean existsByeMail(String eMail);
     Optional<User> findByeMail(String eMail);
     Optional<User> findByeMailAndPassword(String eMail, String password);
 

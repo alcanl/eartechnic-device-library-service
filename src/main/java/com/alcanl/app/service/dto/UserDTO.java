@@ -1,26 +1,28 @@
 package com.alcanl.app.service.dto;
 
 import com.alcanl.app.repository.entity.FittingInfo;
-import com.alcanl.app.repository.entity.HearingAid;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.StringUtils;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class UserDTO {
 
+    private long m_userId;
+
     private String m_firstName;
 
     private String m_eMail;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String m_password;
 
     private String m_lastName;
 
-    private LocalDate m_dateOfBirth;
+    private String m_dateOfBirth;
 
-    private HearingAid m_hearingAid;
+    private int m_hearingAidModelNumber;
 
     private Set<FittingInfo> m_fittingInfo;
 
@@ -54,12 +56,12 @@ public class UserDTO {
         m_password = password;
     }
 
-    public LocalDate getDateOfBirth()
+    public String getDateOfBirth()
     {
         return m_dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth)
+    public void setDateOfBirth(String dateOfBirth)
     {
         m_dateOfBirth = dateOfBirth;
     }
@@ -74,14 +76,16 @@ public class UserDTO {
         m_lastName = lastName;
     }
 
-    public HearingAid getHearingAid()
+    public int getHearingAidModelNumber()
     {
-        return m_hearingAid;
+        return m_hearingAidModelNumber;
     }
+    public long getUserId() { return m_userId; }
+    public void setUserId(long id) { m_userId = id; }
 
-    public void setHearingAid(HearingAid hearingAid)
+    public void setHearingAidModelNumber(int hearingAidModelNumber)
     {
-        m_hearingAid = hearingAid;
+        m_hearingAidModelNumber = hearingAidModelNumber;
     }
 
     public Set<FittingInfo> getFittingInfo()

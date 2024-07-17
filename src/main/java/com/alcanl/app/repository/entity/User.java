@@ -12,6 +12,7 @@ import java.util.Set;
 public class User {
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long userId;
 
     @Column(name = "first_name", nullable = false)
@@ -29,6 +30,7 @@ public class User {
     @Column(name = "birth_date", nullable = false)
     public LocalDate dateOfBirth;
 
+    //Test için true ya çek
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hearing_aid_model_name", nullable = false)
     public HearingAid hearingAid;

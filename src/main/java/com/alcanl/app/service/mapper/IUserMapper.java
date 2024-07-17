@@ -2,14 +2,16 @@ package com.alcanl.app.service.mapper;
 
 import com.alcanl.app.repository.entity.User;
 import com.alcanl.app.service.dto.UserDTO;
+import com.alcanl.app.service.mapper.converter.HearingAidToModelNumberConverter;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(implementationName = "UserMapperImpl", componentModel = "spring")
+@Mapper(implementationName = "UserMapperImpl", componentModel = "spring", uses = ICommonMapper.class)
 public interface IUserMapper {
 
     @InheritInverseConfiguration
+    @Mapping(target = "hearingAid", ignore = true)
     @Mapping(target = "userId", ignore = true)
     User toUser(UserDTO userDTO);
 
@@ -17,8 +19,8 @@ public interface IUserMapper {
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(source = "password", target = "password")
     @Mapping(source = "eMail", target = "EMail")
-    @Mapping(source = "dateOfBirth", target = "dateOfBirth")
-    @Mapping(source = "hearingAid", target = "hearingAid")
+    @Mapping(source = "dateOfBirth", target = "dateOfBirth", dateFormat = "dd/MM/yyyy")
+    @Mapping(source = "hearingAid", target = "hearingAidModelNumber", qualifiedBy = HearingAidToModelNumberConverter.class)
     @Mapping(source = "fittingInfo", target = "fittingInfo")
     UserDTO toUserDTO(User user);
 }

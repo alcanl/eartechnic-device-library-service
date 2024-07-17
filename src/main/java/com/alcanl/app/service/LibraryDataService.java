@@ -7,6 +7,7 @@ import com.karandev.util.data.repository.exception.RepositoryException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -50,15 +51,27 @@ public class LibraryDataService {
             throw new ServiceException("LibraryDataService::saveFittingInfo", ex);
         }
     }
+
+    @Transactional
     public Optional<UserDTO> saveUser(UserDTO userDTO)
     {
         try {
-            return m_libraryServiceDataHelper.saveUser(m_userMapper.toUser(userDTO)).map(m_userMapper::toUserDTO);
+            var hearingAid = m_libraryServiceDataHelper.findHearingAidByModelNumber(userDTO.getHearingAidModelNumber());
+
+            if (hearingAid.isPresent()) {
+                var user = m_userMapper.toUser(userDTO);
+                user.hearingAid = hearingAid.get();
+                return m_libraryServiceDataHelper.saveUser(user).map(m_userMapper::toUserDTO);
+            }
+
+            return Optional.empty();
         } catch (RepositoryException ex) {
             log.error("Error in service, saveUser: {}", ex.getMessage());
             throw new ServiceException("LibraryDataService::saveUser", ex);
         }
     }
+
+    @Transactional
     public Optional<HearingAidDTO> saveHearingAid(HearingAidDTO hearingAidDTO)
     {
         try {

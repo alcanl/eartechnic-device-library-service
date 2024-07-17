@@ -76,7 +76,7 @@ public class LibraryServiceDataHelper {
     public Optional<User> saveUser(User user)
     {
         try {
-            if (m_userRepository.existsById(user.userId))
+            if (m_userRepository.existsByeMail(user.eMail))
                 return Optional.empty();
 
             return Optional.of(m_userRepository.save(user));

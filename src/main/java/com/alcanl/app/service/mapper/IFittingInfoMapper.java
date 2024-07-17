@@ -30,6 +30,6 @@ public interface IFittingInfoMapper {
 
     @Mapping(source = "user", target = "userId", qualifiedBy = UserToUserIdConverter.class)
     @Mapping(source = "savedParam", target = "paramId", qualifiedBy = ParamToParamNameConverter.class)
-    @Mapping(source = "fittingDate", target = "fittingDate", dateFormat = "dd/MM/yyyy")
+    @Mapping(source = "fittingDate", target = "fittingDate", dateFormat = "dd/MM/yyyy HH:mm:ss")
     FittingInfoDTO toFittingInfoDTO(FittingInfo fittingInfo);
 }
