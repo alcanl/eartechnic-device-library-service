@@ -30,7 +30,6 @@ public class User {
     @Column(name = "birth_date", nullable = false)
     public LocalDate dateOfBirth;
 
-    //Test için true ya çek
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hearing_aid_model_name", nullable = false)
     public HearingAid hearingAid;

@@ -2,11 +2,12 @@ package com.alcanl.app.repository.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "hearing_aid")
-public class HearingAid {
+public class HearingAid implements Serializable {
     @Id
     @Column(name = "hearing_aid_model_name")
     public String modelName;
@@ -27,6 +28,10 @@ public class HearingAid {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "paramId", nullable = false)
     public Param defaultParam;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "equalizerValuesId")
+    public EqualizerValues equalizerValues;
 
     @Column(name = "active_param_id")
     public String activeParamId;

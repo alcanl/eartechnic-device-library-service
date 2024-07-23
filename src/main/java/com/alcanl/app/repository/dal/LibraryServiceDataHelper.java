@@ -1,11 +1,7 @@
 package com.alcanl.app.repository.dal;
 
-import com.alcanl.app.repository.IHearingAidRepository;
-import com.alcanl.app.repository.ILibraryRepository;
-import com.alcanl.app.repository.IParamRepository;
-import com.alcanl.app.repository.IUserRepository;
+import com.alcanl.app.repository.*;
 import com.alcanl.app.repository.entity.*;
-import com.alcanl.app.repository.IFittingInfoRepository;
 import com.karandev.util.data.repository.exception.RepositoryException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,14 +15,17 @@ public class LibraryServiceDataHelper {
     private final IParamRepository m_paramRepository;
     private final IUserRepository m_userRepository;
     private final IFittingInfoRepository m_fittingInfoRepository;
+    private final IEqualizerValuesRepository m_equalizerValuesRepository;
     public LibraryServiceDataHelper(IHearingAidRepository hearingAidRepository, ILibraryRepository libraryRepository,
-                                    IParamRepository paramRepository, IUserRepository _userRepository, IFittingInfoRepository fittingInfoRepository)
+                                    IParamRepository paramRepository, IUserRepository _userRepository, IFittingInfoRepository fittingInfoRepository,
+                                    IEqualizerValuesRepository equalizerValuesRepository)
     {
         m_hearingAidRepository = hearingAidRepository;
         m_libraryRepository = libraryRepository;
         m_paramRepository = paramRepository;
         m_userRepository = _userRepository;
         m_fittingInfoRepository = fittingInfoRepository;
+        m_equalizerValuesRepository = equalizerValuesRepository;
     }
 
     public Optional<byte []> findDefaultParamDataByHearingAid(HearingAid hearingAid)
@@ -237,6 +236,24 @@ public class LibraryServiceDataHelper {
         } catch (Throwable ex) {
             log.error("Error finding user by id: {}", ex.getMessage());
             throw new RepositoryException("LibraryServiceDataHelper::findByUserId", ex);
+        }
+    }
+    public Optional<EqualizerValues> findEqualizerValuesById(long id)
+    {
+        try {
+            return m_equalizerValuesRepository.findEqualizerValuesByEqualizerValuesId(id);
+        } catch (Throwable ex) {
+            log.error("Error finding equalizer values by id: {}", ex.getMessage());
+            throw new RepositoryException("LibraryServiceDataHelper::findEqualizerValuesById", ex);
+        }
+    }
+    public Optional<EqualizerValues> findEqualizerValuesByEqualizerValuesName(String modelName)
+    {
+        try {
+            return m_equalizerValuesRepository.findEqualizerValuesByEqualizerValuesName(modelName);
+        } catch (Throwable ex) {
+            log.error("Error finding equalizer values by name: {}", ex.getMessage());
+            throw new RepositoryException("LibraryServiceDataHelper::findEqualizerValuesByEqualizerValuesName", ex);
         }
     }
 }
