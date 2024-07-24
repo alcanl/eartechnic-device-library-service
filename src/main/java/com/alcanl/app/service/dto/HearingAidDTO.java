@@ -6,15 +6,20 @@ public class HearingAidDTO {
     private String m_libraryId;
     private String m_defaultParamId;
     private String m_activeParamId;
+    private long m_equalizerValuesId;
     private int m_WdrcChannelCount;
     private int m_FrequencyChannelCount;
-    public HearingAidDTO(String hearingAidModel, String libraryId, String defaultParamId, int wdrcChannelCount, int frequencyChannelCount)
+    public HearingAidDTO(String hearingAidModel, String libraryId, String defaultParamId, int wdrcChannelCount,
+                         int frequencyChannelCount, long equalizerValuesId, int modelNumber, String activeParamId)
     {
         m_modelName = hearingAidModel;
         m_libraryId = libraryId;
         m_defaultParamId = defaultParamId;
         m_WdrcChannelCount = wdrcChannelCount;
         m_FrequencyChannelCount = frequencyChannelCount;
+        m_equalizerValuesId = equalizerValuesId;
+        m_modelNumber = modelNumber;
+        m_activeParamId = activeParamId;
     }
     public HearingAidDTO() {}
     public int getWdrcChannelCount()
@@ -49,7 +54,14 @@ public class HearingAidDTO {
     {
         m_modelNumber = modelNumber;
     }
-
+    public void setEqualizerValuesId(long equalizerValuesId)
+    {
+        m_equalizerValuesId = equalizerValuesId;
+    }
+    public long getEqualizerValuesId()
+    {
+        return m_equalizerValuesId;
+    }
     public String getLibraryId()
     {
         return m_libraryId;

@@ -21,10 +21,11 @@ public class LibraryDataService {
     private final IParamMapper m_paramMapper;
     private final IHearingAidMapper m_hearingAidMapper;
     private final IUserMapper m_userMapper;
+    private final IEqualizerValuesMapper m_equalizerValuesMapper;
 
     public LibraryDataService(LibraryServiceDataHelper libraryServiceDataHelper, IFittingInfoMapper fittingInfoMapper,
                               ILibraryMapper libraryMapper, IParamMapper paramMapper, IHearingAidMapper hearingAidMapper,
-                              IUserMapper userMapper)
+                              IUserMapper userMapper, IEqualizerValuesMapper equalizerValuesMapper)
     {
         m_libraryServiceDataHelper = libraryServiceDataHelper;
         m_fittingInfoMapper = fittingInfoMapper;
@@ -32,6 +33,7 @@ public class LibraryDataService {
         m_paramMapper = paramMapper;
         m_hearingAidMapper = hearingAidMapper;
         m_userMapper = userMapper;
+        m_equalizerValuesMapper = equalizerValuesMapper;
     }
     public Optional<FittingInfoDTO> saveFittingInfo(FittingInfoDTO fittingInfoDTO)
     {
@@ -124,7 +126,8 @@ public class LibraryDataService {
             var hearingAidList = new LibraryToHearingAidsDTO();
             m_libraryServiceDataHelper.findHearingAidsByLibraryId(libraryId)
                     .forEach(ha -> hearingAidList.hearingAids.add(new HearingAidDTO(
-                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount)));
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount,
+                            ha.equalizerValues.equalizerValuesId, ha.modelNumber, ha.activeParamId)));
 
             return hearingAidList;
 
@@ -141,7 +144,8 @@ public class LibraryDataService {
 
             m_libraryServiceDataHelper.findHearingAidByParamId(paramId)
                     .forEach(ha -> hearingAidList.hearingAidDTOs.add(new HearingAidDTO(
-                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount)));
+                            ha.modelName, ha.library.libId, ha.defaultParam.paramId, ha.wdrcChannelCount, ha.frequencyChannelCount,
+                            ha.equalizerValues.equalizerValuesId, ha.modelNumber, ha.activeParamId)));
 
             return hearingAidList;
 
@@ -294,5 +298,27 @@ public class LibraryDataService {
         return hearingAid.flatMap(aid -> m_libraryServiceDataHelper.findDefaultParamByHearingAid(aid)
                 .map(m_paramMapper::toParamDTO));
 
+    }
+    public Optional<EqualizerValuesDTO> findEqualizerValuesByHearingAidModelNumber(int modelNumber)
+    {
+        try {
+            return findHearingAidByModelNumber(modelNumber).flatMap(hearingAidDTO -> m_libraryServiceDataHelper
+                    .findEqualizerValuesById(hearingAidDTO.getEqualizerValuesId())
+                    .map(m_equalizerValuesMapper::toEqualizerValuesDTO));
+        }catch (Throwable ex) {
+            log.error("Error in service, findEqualizerValuesByHearingAidModelNumber: {}", ex.getMessage());
+            throw new ServiceException("LibraryDataService::findEqualizerValuesByHearingAid", ex);
+        }
+    }
+    public Optional<EqualizerValuesDTO> findEqualizerValuesById(long equalizerValuesId)
+    {
+        try {
+            return m_libraryServiceDataHelper.findEqualizerValuesById(equalizerValuesId)
+                    .map(m_equalizerValuesMapper::toEqualizerValuesDTO);
+
+        }catch (Throwable ex) {
+            log.error("Error in service, findEqualizerValuesById: {}", ex.getMessage());
+            throw new ServiceException("LibraryDataService::findEqualizerValuesId", ex);
+        }
     }
 }

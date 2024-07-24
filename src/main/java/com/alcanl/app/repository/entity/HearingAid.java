@@ -29,8 +29,8 @@ public class HearingAid implements Serializable {
     @JoinColumn(name = "paramId", nullable = false)
     public Param defaultParam;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "equalizerValuesId")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "equalizerValuesId", nullable = false)
     public EqualizerValues equalizerValues;
 
     @Column(name = "active_param_id")

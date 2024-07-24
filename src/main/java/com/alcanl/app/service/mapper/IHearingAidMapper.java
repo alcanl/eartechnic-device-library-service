@@ -4,6 +4,7 @@ import com.alcanl.app.repository.entity.HearingAid;
 import com.alcanl.app.repository.entity.Library;
 import com.alcanl.app.repository.entity.Param;
 import com.alcanl.app.service.dto.HearingAidDTO;
+import com.alcanl.app.service.mapper.converter.EqualizerValuesToEqualizerValuesIdConverter;
 import com.alcanl.app.service.mapper.converter.LibraryToLibraryNameConverter;
 import com.alcanl.app.service.mapper.converter.ParamToParamNameConverter;
 import org.mapstruct.Mapper;
@@ -30,6 +31,7 @@ public interface IHearingAidMapper {
         }
     }
 
+    @Mapping(source = "equalizerValues", target = "equalizerValuesId", qualifiedBy = EqualizerValuesToEqualizerValuesIdConverter.class)
     @Mapping(source = "defaultParam", target = "defaultParamId", qualifiedBy = ParamToParamNameConverter.class)
     @Mapping(source = "library", target = "libraryId", qualifiedBy = LibraryToLibraryNameConverter.class)
     HearingAidDTO toHearingAidDTO(HearingAid hearingAid);

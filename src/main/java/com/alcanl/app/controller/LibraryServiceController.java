@@ -183,4 +183,16 @@ public class LibraryServiceController {
         logInfo("getHearingAidModelNumberByModelName");
         return ResponseEntity.of(m_libraryDataService.findHearingAidModelNumberByModelName(modelName));
     }
+    @GetMapping("/model/equalizer/values")
+    public ResponseEntity<EqualizerValuesDTO> getEqualizerValuesByHearingAidModelNumber(@RequestParam("number")int modelNumber)
+    {
+        logInfo("getEqualizerValuesByHearingAidModelNumber");
+        return ResponseEntity.of(m_libraryDataService.findEqualizerValuesByHearingAidModelNumber(modelNumber));
+    }
+    @GetMapping("/equalizer/values")
+    public ResponseEntity<EqualizerValuesDTO> getEqualizerValuesById(@RequestParam("id")long equalizerValuesId)
+    {
+        logInfo("getEqualizerValuesByHearingAidModelNumber");
+        return ResponseEntity.of(m_libraryDataService.findEqualizerValuesById(equalizerValuesId));
+    }
 }
