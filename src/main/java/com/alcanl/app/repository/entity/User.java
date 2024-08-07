@@ -30,6 +30,12 @@ public class User {
     @Column(name = "birth_date", nullable = false)
     public LocalDate dateOfBirth;
 
+    @Column(name = "nationality_number", nullable = false)
+    public String nationalityNumber;
+
+    @Column(name = "phone_number", nullable = false)
+    public String phoneNumber;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hearing_aid_model_name", nullable = false)
     public HearingAid hearingAid;

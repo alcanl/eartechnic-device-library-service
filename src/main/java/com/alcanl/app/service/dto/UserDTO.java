@@ -22,6 +22,10 @@ public class UserDTO {
 
     private String m_dateOfBirth;
 
+    private String m_nationalityNumber;
+
+    private String m_phoneNumber;
+
     private int m_hearingAidModelNumber;
 
     private Set<FittingInfo> m_fittingInfo;
@@ -65,6 +69,12 @@ public class UserDTO {
     {
         m_dateOfBirth = dateOfBirth;
     }
+
+    public String getNationalityNumber() { return m_nationalityNumber; }
+    public void setNationalityNumber( String nationalityNumber ) { m_nationalityNumber = nationalityNumber;}
+
+    public String getPhoneNumber() { return m_phoneNumber; }
+    public void setPhoneNumber( String phoneNumber ) { m_phoneNumber = phoneNumber;}
 
     public String getLastName()
     {

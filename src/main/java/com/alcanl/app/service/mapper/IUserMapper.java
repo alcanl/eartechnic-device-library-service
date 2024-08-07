@@ -20,6 +20,8 @@ public interface IUserMapper {
     @Mapping(source = "password", target = "password")
     @Mapping(source = "eMail", target = "EMail")
     @Mapping(source = "dateOfBirth", target = "dateOfBirth", dateFormat = "dd/MM/yyyy")
+    @Mapping(source = "nationalityNumber", target = "nationalityNumber")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
     @Mapping(source = "hearingAid", target = "hearingAidModelNumber", qualifiedBy = HearingAidToModelNumberConverter.class)
     @Mapping(source = "fittingInfo", target = "fittingInfo")
     UserDTO toUserDTO(User user);
